@@ -163,6 +163,16 @@ class PurchaseOrder(models.Model):
                         #    help="Number of days between the order confirmation and the shipping of the products to the customer"
     )
     
+    #nemsen
+    manufacture_code = fields.Char(
+        string='Item #',
+        required=False,  # Хэрэв заавал оруулах шаардлагатай бол True болгож өөрчилнө
+        unique=True, # Давхцахгүй байх тохиргоо
+        store=True,
+        related='product_id.manufacture_code',
+        index=True
+    )
+    
     
     
     @api.constrains('company_id', 'order_line')
