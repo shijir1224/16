@@ -151,27 +151,7 @@ class PurchaseOrder(models.Model):
     receipt_reminder_email = fields.Boolean('Receipt Reminder Email', related='partner_id.receipt_reminder_email', readonly=False)
     reminder_date_before_receipt = fields.Integer('Days Before Receipt', related='partner_id.reminder_date_before_receipt', readonly=False)
 
-    #nemsen
-    ship_via = fields.Char(string="Дамжуулан тээвэрлэх",
-                           required=False, store=True, readonly=False 
-                        #    help="Number of days between the order confirmation and the shipping of the products to the customer"
-    )
     
-    #nemsen
-    freight_forwarder = fields.Char(string="Тээвэр зууч",
-                           required=False, store=True, readonly=False 
-                        #    help="Number of days between the order confirmation and the shipping of the products to the customer"
-    )
-    
-    #nemsen
-    manufacture_code = fields.Char(
-        string='Item #',
-        required=False,  # Хэрэв заавал оруулах шаардлагатай бол True болгож өөрчилнө
-        unique=True, # Давхцахгүй байх тохиргоо
-        store=True,
-        related='product_id.manufacture_code',
-        index=True
-    )
     
     
     @api.constrains('company_id', 'order_line')
@@ -1004,6 +984,28 @@ class PurchaseOrderLine(models.Model):
                                            compute="_compute_product_packaging_id", store=True, readonly=False)
     product_packaging_qty = fields.Float('Packaging Quantity', compute="_compute_product_packaging_qty", store=True, readonly=False)
 
+    #nemsen
+    ship_via = fields.Char(string="Дамжуулан тээвэрлэх",
+                           required=False, store=True, readonly=False 
+                        #    help="Number of days between the order confirmation and the shipping of the products to the customer"
+    )
+    
+    #nemsen
+    freight_forwarder = fields.Char(string="Тээвэр зууч",
+                           required=False, store=True, readonly=False 
+                        #    help="Number of days between the order confirmation and the shipping of the products to the customer"
+    )
+    
+    #nemsen
+    manufacture_code = fields.Char(
+        string='Item #',
+        required=False,  # Хэрэв заавал оруулах шаардлагатай бол True болгож өөрчилнө
+        unique=True, # Давхцахгүй байх тохиргоо
+        store=True,
+        related='product_id.manufacture_code',
+        index=True
+    )
+    
     display_type = fields.Selection([
         ('line_section', "Section"),
         ('line_note', "Note")], default=False, help="Technical field for UX purpose.")
