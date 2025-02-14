@@ -1027,6 +1027,25 @@ class PurchaseOrderLine(models.Model):
         index=True
     )
     
+    freight = fields.Monetary(
+        string="Freight", required=True 
+    )
+    
+    service_fee = fields.Monetary(
+        string="Service fee",
+        required=True, store=True, readonly=False 
+    )
+    
+    packing_fee = fields.Monetary(
+        string="Packing fee",
+        required=True, store=True, readonly=False 
+    )
+    
+    other_fee = fields.Monetary(
+        string="Other fees",
+        required=True, store=True, readonly=False 
+    )
+    
     display_type = fields.Selection([
         ('line_section', "Section"),
         ('line_note', "Note")], default=False, help="Technical field for UX purpose.")
