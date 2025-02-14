@@ -107,7 +107,7 @@ class SaleOrderLine(models.Model):
         store=True, readonly=False, precompute=True, ondelete='restrict')
 
     name = fields.Text(
-        string="Description",
+        string="Item Name",
         compute='_compute_name',
         store=True, readonly=False, required=True, precompute=True)
 
@@ -317,20 +317,28 @@ class SaleOrderLine(models.Model):
     @api.depends('product_id')
     def _compute_name(self):
         for line in self:
-            if not line.product_id:
-                continue
-            if not line.order_partner_id.is_public:
-                line = line.with_context(lang=line.order_partner_id.lang)
-            name = line._get_sale_order_line_multiline_description_sale()
-            if line.is_downpayment and not line.display_type:
-                context = {'lang': line.order_partner_id.lang}
-                dp_state = line._get_downpayment_state()
-                if dp_state == 'draft':
-                    name = _("%(line_description)s (Draft)", line_description=name)
-                elif dp_state == 'cancel':
-                    name = _("%(line_description)s (Canceled)", line_description=name)
-                del context
-            line.name = name
+            if line.product_id:
+                line.name = line.product_id.name  # Бүтээгдэхүүний нэрийг name талбарт оруулах
+            else:
+                line.name = ''
+                
+    #@api.depends('product_id')         
+    # def _compute_name(self):
+    #     for line in self:
+    #         if not line.product_id:
+    #             continue
+    #         if not line.order_partner_id.is_public:
+    #             line = line.with_context(lang=line.order_partner_id.lang)
+    #         name = line._get_sale_order_line_multiline_description_sale()
+    #         if line.is_downpayment and not line.display_type:
+    #             context = {'lang': line.order_partner_id.lang}
+    #             dp_state = line._get_downpayment_state()
+    #             if dp_state == 'draft':
+    #                 name = _("%(line_description)s (Draft)", line_description=name)
+    #             elif dp_state == 'cancel':
+    #                 name = _("%(line_description)s (Canceled)", line_description=name)
+    #             del context
+    #         line.name = name
 
     def _get_sale_order_line_multiline_description_sale(self):
         """ Compute a default multiline description for this sales order line.
