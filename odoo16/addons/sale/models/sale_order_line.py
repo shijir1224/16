@@ -263,6 +263,18 @@ class SaleOrderLine(models.Model):
         compute='_compute_product_updatable')
     product_uom_readonly = fields.Boolean(
         compute='_compute_product_uom_readonly')
+    
+    manufacture_code = fields.Char(
+        string='Item #',
+        required=False,  # Хэрэв заавал оруулах шаардлагатай бол True болгож өөрчилнө
+        unique=True, # Давхцахгүй байх тохиргоо
+        store=True, # Харуулах шаардлаггүй бол False болгоно
+        related='product_id.manufacture_code'
+    )
+    
+    tissue_no = fields.Char(string="Soyolon #", required=False, unique=True, store=True, related='product_id.tissue_no')
+    
+    image_128 = fields.Image(related='product_id.image_128', string="Picture", readonly=True)
 
     #=== COMPUTE METHODS ===#
 

@@ -310,6 +310,8 @@
                                             force_save="1"
                                             widget="many2one_barcode"
                                             />
+                                        <field name="tissue_no" invisible="1" />
+                                        <field name="manufacture_code" invisible="1" />
                                         <field name="product_type" invisible="1"/>
                                         <field name="invoice_status" invisible="1"/>
                                         <field name="qty_to_invoice" invisible="1"/>
@@ -418,6 +420,8 @@
                                     domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
                                     widget="sol_product_many2one"
                                 />
+                                <field name="tissue_no" optional="show"/>
+                                <field name="manufacture_code" optional="show"/>
                                 <field name="product_template_id"
                                     string="Product"
                                     invisible="1"
@@ -522,6 +526,8 @@
                             <kanban class="o_kanban_mobile">
                                 <field name="name"/>
                                 <field name="product_id"/>
+                                <field name="tissue_no" />
+                                <field name="manufacture_code" />
                                 <field name="product_uom_qty"/>
                                 <field name="product_uom"/>
                                 <field name="price_subtotal"/>
