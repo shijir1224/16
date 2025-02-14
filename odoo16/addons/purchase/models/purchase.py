@@ -173,6 +173,26 @@ class PurchaseOrder(models.Model):
         index=True
     )
     
+    freight = fields.Monetary(
+        string="Freight", required=True 
+    )
+    
+    service_fee = fields.Monetary(
+        string="Service fee",
+        required=True, store=True, readonly=False 
+    )
+    
+    packing_fee = fields.Monetary(
+        string="Packing fee",
+        required=True, store=True, readonly=False 
+    )
+    
+    other_fee = fields.Monetary(
+        string="Other fees",
+        required=True, store=True, readonly=False 
+    )
+    
+    
     
     
     @api.constrains('company_id', 'order_line')
@@ -225,14 +245,37 @@ class PurchaseOrder(models.Model):
             result.append((po.id, name))
         return result
 
-    @api.depends('order_line.taxes_id', 'order_line.price_subtotal', 'amount_total', 'amount_untaxed')
-    def  _compute_tax_totals(self):
+    @api.depends( 'order_line.taxes_id', 'order_line.price_subtotal', 'amount_total', 'amount_untaxed', 'freight', 'service_fee', 'packing_fee', 'other_fee')
+    def _compute_tax_totals(self):
         for order in self:
-            order_lines = order.order_line.filtered(lambda x: not x.display_type)
-            order.tax_totals = self.env['account.tax']._prepare_tax_totals(
+            order_lines = order.order_line.sudo().filtered(lambda x: not x.display_type)  # `sudo()` нэмсэн
+            additional_amounts = sum([
+                order.freight, 
+                order.service_fee, 
+                order.packing_fee, 
+                order.other_fee
+            ])
+
+            tax_totals = self.env['account.tax'].sudo()._prepare_tax_totals(
                 [x._convert_to_tax_base_line_dict() for x in order_lines],
                 order.currency_id or order.company_id.currency_id,
             )
+
+            # tax_totals['amount_total'] += additional_amounts
+            # tax_totals['amount_untaxed'] += additional_amounts
+            tax_totals['amount_total'] = tax_totals.get('amount_total', 0.0) + additional_amounts
+            tax_totals['amount_untaxed'] = tax_totals.get('amount_untaxed', 0.0) + additional_amounts
+
+            order.tax_totals = tax_totals
+            
+    # @api.depends('order_line.taxes_id', 'order_line.price_subtotal', 'amount_total', 'amount_untaxed')
+    # def  _compute_tax_totals(self):
+    #     for order in self:
+    #         order_lines = order.order_line.filtered(lambda x: not x.display_type)
+    #         order.tax_totals = self.env['account.tax']._prepare_tax_totals(
+    #             [x._convert_to_tax_base_line_dict() for x in order_lines],
+    #             order.currency_id or order.company_id.currency_id,
+    #         )
 
     @api.depends('company_id.account_fiscal_country_id', 'fiscal_position_id.country_id', 'fiscal_position_id.foreign_vat')
     def _compute_tax_country_id(self):
@@ -1027,24 +1070,7 @@ class PurchaseOrderLine(models.Model):
         index=True
     )
     
-    freight = fields.Monetary(
-        string="Freight", required=True 
-    )
     
-    service_fee = fields.Monetary(
-        string="Service fee",
-        required=True, store=True, readonly=False 
-    )
-    
-    packing_fee = fields.Monetary(
-        string="Packing fee",
-        required=True, store=True, readonly=False 
-    )
-    
-    other_fee = fields.Monetary(
-        string="Other fees",
-        required=True, store=True, readonly=False 
-    )
     
     display_type = fields.Selection([
         ('line_section', "Section"),
