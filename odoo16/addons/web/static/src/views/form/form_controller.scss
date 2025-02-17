@@ -414,6 +414,21 @@
         }
     }
 
+    .zoomable {
+        transition: transform 0.3s ease;
+        cursor: zoom-in;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .zoomable:hover {
+        transform: scale(2);
+        z-index: 999;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+    
+
     // Status dropdown
     a[data-bs-toggle="dropdown"] > .o_status {
         height: $h3-font-size;

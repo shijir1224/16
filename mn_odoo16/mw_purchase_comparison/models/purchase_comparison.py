@@ -18,7 +18,7 @@ class PurchaseOrderComparison(Model):
 		return self._get_picking_type(self.env.context.get('company_id', self.env.company.id))
 
 	picking_type_id = fields.Many2one('stock.picking.type', 'Deliver To', states=READONLY_STATES,
-									  required=True, default=_default_picking_type,
+									  required=False, default=_default_picking_type,
 									  domain="['|', ('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]",
 									  help="This will determine operation type of incoming shipment")
 	name = fields.Char('Order Reference', required=True, index=True, copy=False, default='/')
