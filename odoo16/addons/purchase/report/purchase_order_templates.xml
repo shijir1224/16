@@ -79,13 +79,14 @@
                                 <td id="product">
                                     <span t-field="line.product_id.name"/><br></br>
                                     <t t-if="line.product_template_variant_value_ids">
-                                    <div class="o_variant_tags">
-                                        <t t-foreach="line.product_template_variant_value_ids" t-as="variant">
-                                            <span class="badge rounded-pill bg-light text-dark me-2">
-                                                <t t-esc="variant.attribute_id.name"/>: <t t-esc="variant.name"/>
-                                            </span>
-                                        </t>
-                                    </div>
+                                        <div class="o_variant_tags">
+                                            <t t-foreach="line.product_template_variant_value_ids" t-as="variant">
+                                                <span class="badge rounded-pill bg-light text-dark me-2">
+                                                    <t t-esc="variant.attribute_id.name"/>: <t t-esc="variant.name"/>
+                                                </span>
+                                            </t>
+                                        </div>
+                                    </t>
                                 </td>
                                 <td name="td_taxes">
                                     <span t-esc="', '.join(map(lambda x: x.description or x.name, line.taxes_id))"/>
