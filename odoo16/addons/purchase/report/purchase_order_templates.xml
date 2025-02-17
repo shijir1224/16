@@ -44,6 +44,41 @@
                     <p t-field="o.date_order" class="m-0"/>
                 </div>
             </div>
+            <table class="table table-sm o_main_table table-borderless mt-4 oe_structure">
+                <thead>
+                    <tr>
+                        <th class="text-center"><strong> Incoterm </strong></th>
+                        <th class="text-center"><strong>Ship via</strong></th>
+                        <th class="text-center"><strong>Freight Forwarder</strong></th>
+                        <th class="text-center"><strong>Payment Terms</strong></th>
+                        <th class="text-center"><strong>Lead Time</strong></th>
+                        <th class="text-center"><strong>Currency</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-center">
+                            <span t-if="o.incoterm_id" t-field="o.incoterm_id.code"/> <br/>
+                            <span t-if="o.incoterm_location" t-field="o.incoterm_location"/>
+                        </td>
+                        <td class="text-center">
+                            <span t-if="o.ship_via" t-field="o.ship_via"/> 
+                        </td>
+                        <td class="text-center">    
+                            <span t-if="o.freight_forwarder" t-field="o.freight_forwarder"/>
+                        </td>
+                        <td class="text-center">
+                            <span t-if="o.payment_term_id" t-field="o.payment_term_id.note"/>
+                        </td>
+                        <td class="text-center">
+                            <span t-if="o.deliver_day" t-field="o.deliver_day"/> 
+                        </td>
+                        <td class="text-center">
+                            <span t-if="o.currency_id" t-field="o.currency_id.name"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
 
             <table class="table table-sm o_main_table table-borderless mt-4">
                 <thead style="display: table-row-group">
