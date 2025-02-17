@@ -140,7 +140,7 @@ class ProductTemplate(models.Model):
     # related to display product product information if is_product_variant
     barcode = fields.Char('Barcode', compute='_compute_barcode', inverse='_set_barcode', search='_search_barcode')
     default_code = fields.Char(
-        'Internal Reference', compute='_compute_default_code',
+        'Stock #', compute='_compute_default_code',
         inverse='_set_default_code', store=True)
 
     pricelist_item_count = fields.Integer("Number of price rules", compute="_compute_item_count")
