@@ -23,7 +23,10 @@
             <table class="table table-sm mt-4">
                 <thead style="display: table-row-group">
                     <tr>
-                        <th name="th_description"><strong>Description</strong></th>
+                        <th name="th_number" class="text-center"><strong> # </strong></th>
+                        <th name="th_stock" class="text-center"><strong>Stock #</strong></th>
+                        <th name="th_manufacture_code" class="text-center"><strong>Item #</strong></th>
+                        <th name="th_description" class="text-center"><strong>Item Name</strong></th>
                         <th name="th_expected_date" class="text-center"><strong>Expected Date</strong></th>
                         <th name="th_quantity" class="text-end"><strong>Qty</strong></th>
                     </tr>
@@ -32,8 +35,17 @@
                     <t t-foreach="o.order_line" t-as="order_line">
                         <tr t-att-class="'bg-200 fw-bold o_line_section' if order_line.display_type == 'line_section' else 'fst-italic o_line_note' if order_line.display_type == 'line_note' else ''">
                             <t t-if="not order_line.display_type">
+                                <td id="product" class="text-center">
+                                    <span t-field="order_line.line_number"/>
+                                </td>
                                 <td id="product">
-                                    <span t-field="order_line.name"/>
+                                    <span t-field="order_line.product_id.default_code"/>
+                                </td>
+                                <td class="text-center" >
+                                    <span t-field="order_line.product_id.manufacture_code"/>
+                                </td>
+                                <td id="product">
+                                    <span t-field="order_line.product_id.name"/>
                                 </td>
                                 <td class="text-center">
                                     <span t-field="order_line.date_planned"/>

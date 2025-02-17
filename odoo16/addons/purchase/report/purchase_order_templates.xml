@@ -47,10 +47,11 @@
 
             <table class="table table-sm o_main_table table-borderless mt-4">
                 <thead style="display: table-row-group">
-                    <tr>    
-                        <th name="th_stock_number"><strong>Stock #</strong></th>
-                        <th name="th_item_number"><strong>Item #</strong></th>
-                        <th name="th_description"><strong>Item Name</strong></th>
+                    <tr>  
+                        <th name="th_number" class="text-center"><strong> #</strong></th>  
+                        <th name="th_stock_number" class="text-center"><strong>Stock #</strong></th>
+                        <th name="th_item_number" class="text-center"><strong>Item #</strong></th>
+                        <th name="th_description" class="text-center"><strong>Item Name</strong></th>
                         <th name="th_taxes"><strong>Taxes</strong></th>
                         <th name="th_date_req" class="text-center"><strong>Date Req.</strong></th>
                         <th name="th_quantity" class="text-end"><strong>Qty</strong></th>
@@ -66,14 +67,25 @@
 
                         <tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
                             <t t-if="not line.display_type">
-                                <td id="product">
+                                <td id="product" class="text-center">
+                                    <span t-field="line.line_number"/>
+                                </td>
+                                <td id="product" class="text-center">
                                     <span t-field="line.product_id.default_code"/>
                                 </td>
-                                <td id="product">
+                                <td id="product" class="text-center">
                                     <span t-field="line.product_id.manufacture_code"/>
                                 </td>
                                 <td id="product">
-                                    <span t-field="line.product_id.name"/>
+                                    <span t-field="line.product_id.name"/><br></br>
+                                    <t t-if="line.product_template_variant_value_ids">
+                                    <div class="o_variant_tags">
+                                        <t t-foreach="line.product_template_variant_value_ids" t-as="variant">
+                                            <span class="badge rounded-pill bg-light text-dark me-2">
+                                                <t t-esc="variant.attribute_id.name"/>: <t t-esc="variant.name"/>
+                                            </span>
+                                        </t>
+                                    </div>
                                 </td>
                                 <td name="td_taxes">
                                     <span t-esc="', '.join(map(lambda x: x.description or x.name, line.taxes_id))"/>
