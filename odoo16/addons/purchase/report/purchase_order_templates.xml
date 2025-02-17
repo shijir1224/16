@@ -172,15 +172,15 @@
                        
                             <tr>
                                 <td><strong>Untaxed Amount</strong></td>
-                                <td class="text-right"><strong> <t t-esc="o.amount_untaxed" widget="monetary"/></strong></td>
+                                <td class="text-right"><strong> <span t-field="o.amount_untaxed"/></strong></td>
                             </tr>
                             <tr>
                                 <td>Purchased goods and services</td>
-                                <td class="text-right"> <t t-esc="o.amount_tax" widget="monetary"/></td>
+                                <td class="text-right"> <span t-field="o.amount_tax"/></td>
                             </tr>
                             <tr style="background-color: #EC5425">
                                 <td><strong>Total</strong></td>
-                                <td class="text-right"><strong><t t-esc="o.amount_total" widget="monetary"/> </strong></td>
+                                <td class="text-right"><strong><span t-field="o.amount_total"/></strong></td>
                             </tr>
                         </table>
                 </div>
