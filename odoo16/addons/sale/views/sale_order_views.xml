@@ -310,8 +310,8 @@
                                             force_save="1"
                                             widget="many2one_barcode"
                                             />
-                                        <field name="tissue_no" invisible="1" />
-                                        <field name="manufacture_code" invisible="1" />
+                                        <field name="tissue_no" invisible="1" position="after" />
+                                        <field name="manufacture_code" invisible="1" position="after"/>
                                         <field name="product_type" invisible="1"/>
                                         <field name="invoice_status" invisible="1"/>
                                         <field name="qty_to_invoice" invisible="1"/>
