@@ -372,10 +372,10 @@
                                     <field colspan="2" name="notes" nolabel="1" placeholder="Define your terms and conditions ..."/>
                                 </group>
                                 <group class="oe_subtotal_footer oe_right">
-                                    <field name="freight"  widget="monetary"/>
-                                    <field name="service_fee"  widget="monetary"/>
-                                    <field name="packing_fee"  widget="monetary"/>
-                                    <field name="other_fee"  widget="monetary"/>
+                                    <field name="freight"  widget="monetary" options="{'currency_field': 'currency_id', 'position': 'after'}"/>
+                                    <field name="service_fee"  widget="monetary" options="{'currency_field': 'currency_id', 'position': 'after'}"/>
+                                    <field name="packing_fee"  widget="monetary" options="{'currency_field': 'currency_id', 'position': 'after'}"/>
+                                    <field name="other_fee"  widget="monetary" options="{'currency_field': 'currency_id', 'position': 'after'}"/>
                                     <field name="tax_totals" widget="account-tax-totals-field" nolabel="1" colspan="2" readonly="1"/>
                                 </group>
                             </group>
