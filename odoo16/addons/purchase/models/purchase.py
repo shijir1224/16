@@ -20,11 +20,13 @@ class PurchaseOrder(models.Model):
     _description = "Purchase Order"
     _rec_names_search = ['name', 'partner_ref']
     _order = 'priority desc, id desc'
-
-    @api.depends('order_line.price_total')
+    
+    
+    
+    @api.depends('order_line.price_total', 'order_line.taxes_id', 'freight', 'service_fee', 'packing_fee', 'other_fee')
     def _amount_all(self):
         for order in self:
-            order_lines = order.order_line.filtered(lambda x: not x.display_type)
+            order_lines = order.order_line.sudo().filtered(lambda x: not x.display_type)
 
             if order.company_id.tax_calculation_rounding_method == 'round_globally':
                 tax_results = self.env['account.tax']._compute_taxes([
@@ -38,9 +40,44 @@ class PurchaseOrder(models.Model):
                 amount_untaxed = sum(order_lines.mapped('price_subtotal'))
                 amount_tax = sum(order_lines.mapped('price_tax'))
 
-            order.amount_untaxed = amount_untaxed
-            order.amount_tax = amount_tax
-            order.amount_total = order.amount_untaxed + order.amount_tax
+            # ✅ Нэмэлт төлбөрүүдийг тооцоолох
+            additional_amounts = order.freight + order.service_fee + order.packing_fee + order.other_fee
+
+            # ✅ Татварын нийт дүнг тооцоолох
+            tax_totals = self.env['account.tax'].sudo()._prepare_tax_totals(
+                [x._convert_to_tax_base_line_dict() for x in order_lines],
+                order.currency_id or order.company_id.currency_id,
+            )
+
+            # ✅ Лог руу хэвлэх (татварын утга зөв эсэхийг шалгах)
+            _logger.info("🚀 [DEBUG] Order ID: %s | Untaxed: %s | Tax: %s | Total: %s", 
+                        order.id, amount_untaxed, amount_tax, amount_untaxed + amount_tax + additional_amounts)
+
+            # ✅ Order-ийн нийт үнийг update хийх
+            order.amount_untaxed = amount_untaxed + additional_amounts
+            order.amount_tax = amount_tax  # Энэ хэсэг асуудалгүй эсэхийг шалгах
+            order.amount_total = amount_untaxed + amount_tax + additional_amounts
+
+    # @api.depends('order_line.price_total')
+    # def _amount_all(self):
+    #     for order in self:
+    #         order_lines = order.order_line.filtered(lambda x: not x.display_type)
+
+    #         if order.company_id.tax_calculation_rounding_method == 'round_globally':
+    #             tax_results = self.env['account.tax']._compute_taxes([
+    #                 line._convert_to_tax_base_line_dict()
+    #                 for line in order_lines
+    #             ])
+    #             totals = tax_results['totals']
+    #             amount_untaxed = totals.get(order.currency_id, {}).get('amount_untaxed', 0.0)
+    #             amount_tax = totals.get(order.currency_id, {}).get('amount_tax', 0.0)
+    #         else:
+    #             amount_untaxed = sum(order_lines.mapped('price_subtotal'))
+    #             amount_tax = sum(order_lines.mapped('price_tax'))
+
+    #         order.amount_untaxed = amount_untaxed
+    #         order.amount_tax = amount_tax
+    #         order.amount_total = order.amount_untaxed + order.amount_tax
 
     @api.depends('state', 'order_line.qty_to_invoice')
     def _get_invoiced(self):
@@ -160,25 +197,14 @@ class PurchaseOrder(models.Model):
         related='product_id.manufacture_code',
         index=True
     )
-    
-    freight = fields.Monetary(
-        string="Freight", required=True 
-    )
-    
-    service_fee = fields.Monetary(
-        string="Service fee",
-        required=True, store=True, readonly=False 
-    )
-    
-    packing_fee = fields.Monetary(
-        string="Packing fee",
-        required=True, store=True, readonly=False 
-    )
-    
-    other_fee = fields.Monetary(
-        string="Other fees",
-        required=True, store=True, readonly=False 
-    )
+    #nemsen
+    freight = fields.Monetary(string="Freight", required=True)
+    #nemsen
+    service_fee = fields.Monetary(string="Service fee",required=True, store=True, readonly=False)
+    #nemsen
+    packing_fee = fields.Monetary(string="Packing fee",required=True, store=True, readonly=False)
+    #nemsen
+    other_fee = fields.Monetary( string="Other fees",required=True, store=True, readonly=False )
     
     
     
@@ -233,6 +259,7 @@ class PurchaseOrder(models.Model):
             result.append((po.id, name))
         return result
 
+    #Бусад зардалыг amount_total дээр нэмсэн бодолт
     @api.depends( 'order_line.taxes_id', 'order_line.price_subtotal', 'amount_total', 'amount_untaxed', 'freight', 'service_fee', 'packing_fee', 'other_fee')
     def _compute_tax_totals(self):
         for order in self:

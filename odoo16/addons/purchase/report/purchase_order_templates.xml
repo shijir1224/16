@@ -47,8 +47,10 @@
 
             <table class="table table-sm o_main_table table-borderless mt-4">
                 <thead style="display: table-row-group">
-                    <tr>
-                        <th name="th_description"><strong>Description</strong></th>
+                    <tr>    
+                        <th name="th_stock_number"><strong>Stock #</strong></th>
+                        <th name="th_item_number"><strong>Item #</strong></th>
+                        <th name="th_description"><strong>Item Name</strong></th>
                         <th name="th_taxes"><strong>Taxes</strong></th>
                         <th name="th_date_req" class="text-center"><strong>Date Req.</strong></th>
                         <th name="th_quantity" class="text-end"><strong>Qty</strong></th>
@@ -64,6 +66,12 @@
 
                         <tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
                             <t t-if="not line.display_type">
+                                <td id="product">
+                                    <span t-field="line.product_id.default_code"/>
+                                </td>
+                                <td id="product">
+                                    <span t-field="line.product_id.manufacture_code"/>
+                                </td>
                                 <td id="product">
                                     <span t-field="line.name"/>
                                 </td>
@@ -113,12 +121,59 @@
                 </tbody>
             </table>
 
-            <div id="total" class="row justify-content-end">
+            <!-- <div id="total" class="row justify-content-end">
                 <div class="col-4">
                     <table class="table table-sm table-borderless">
                         <t t-set="tax_totals" t-value="o.tax_totals"/>
                         <t t-call="account.document_tax_totals"/>
                     </table>
+                </div>
+            </div> -->
+            
+            <div id="total" class="row justify-content-end">
+                <div class="col-4">
+                    <t t-set="tax_totals" t-value="o.tax_totals or {}"/>
+                        <table class="table table-sm table-borderless">
+                            <tr t-if="o.freight">
+                                <td><strong>Freight</strong></td>
+                                <td class="text-end">
+                                    <span t-field="o.freight"/>
+                                </td>
+                            </tr>
+                            <tr t-if="o.service_fee">
+                                <td><strong>Service Fee</strong></td>
+                                <td class="text-end">
+                                    <span t-field="o.service_fee"/>
+                                </td>
+                            </tr>
+                            <tr t-if="o.packing_fee">
+                                <td><strong>Packing Fee</strong></td>
+                                <td class="text-end">
+                                    <span t-field="o.packing_fee"/>
+                                </td>
+                            </tr>
+                            <tr t-if="o.other_fee">
+                                <td><strong>Other Fees</strong></td>
+                                <td class="text-end">
+                                    <span t-field="o.other_fee"/>
+                                </td>
+                            </tr>
+                            <!-- <t t-set="tax_totals" t-value="o.tax_totals"/>
+                            <t t-call="purchase.document_tax_totals"/> -->
+                       
+                            <tr>
+                                <td><strong>Untaxed Amount</strong></td>
+                                <td class="text-right"><strong> <t t-esc="o.amount_untaxed"/>₮</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Purchased goods and services</td>
+                                <td class="text-right"> <t t-esc="o.amount_tax"/>₮</td>
+                            </tr>
+                            <tr style="background-color: #EC5425">
+                                <td><strong>Total</strong></td>
+                                <td class="text-right"><strong><t t-esc="o.amount_total"/> ₮</strong></td>
+                            </tr>
+                        </table>
                 </div>
             </div>
 
