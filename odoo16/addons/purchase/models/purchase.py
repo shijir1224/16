@@ -49,10 +49,6 @@ class PurchaseOrder(models.Model):
                 order.currency_id or order.company_id.currency_id,
             )
 
-            # ✅ Лог руу хэвлэх (татварын утга зөв эсэхийг шалгах)
-            _logger.info("🚀 [DEBUG] Order ID: %s | Untaxed: %s | Tax: %s | Total: %s", 
-                        order.id, amount_untaxed, amount_tax, amount_untaxed + amount_tax + additional_amounts)
-
             # ✅ Order-ийн нийт үнийг update хийх
             order.amount_untaxed = amount_untaxed + additional_amounts
             order.amount_tax = amount_tax  # Энэ хэсэг асуудалгүй эсэхийг шалгах
