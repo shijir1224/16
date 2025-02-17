@@ -11,6 +11,7 @@ _logger = logging.getLogger(__name__)
 
 class PurchaseOrder(models.Model):
 	_inherit = 'purchase.order'
+ 
 
 	po_type = fields.Selection([('internal', 'Дотоод'), ('foreign', 'Гадаад')], 'Төрөл', default='internal')
 	date_currency = fields.Date('Currency rate date', states={'done': [('readonly', True)]}, default=fields.Datetime.now())
@@ -27,7 +28,10 @@ class PurchaseOrder(models.Model):
 										  help='Utility field to express amount currency')
 	amount_expenses_po_tot2 = fields.Monetary(string='Total expenses', store=True, readonly=True,
 											  compute='_amount_expenses_all', currency_field='company_currency_id',
-											  tracking=True)
+											  tracking=True) 
+
+	freight_forwarder = fields.Char(string="Тээвэр зууч", store=True, readonly=False)
+	ship_via = fields.Char(string="Дамжуулан тээвэрлэх", store=True, readonly=False)
 
 	@api.depends('currency_id', 'date_currency', 'state')
 	@api.onchange('currency_id', 'date_currency', 'state')

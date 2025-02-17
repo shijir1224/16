@@ -150,18 +150,6 @@ class PurchaseOrder(models.Model):
 
     receipt_reminder_email = fields.Boolean('Receipt Reminder Email', related='partner_id.receipt_reminder_email', readonly=False)
     reminder_date_before_receipt = fields.Integer('Days Before Receipt', related='partner_id.reminder_date_before_receipt', readonly=False)
-
-    #nemsen
-    ship_via = fields.Char(string="Дамжуулан тээвэрлэх",
-                           required=False, store=True, readonly=False 
-                        #    help="Number of days between the order confirmation and the shipping of the products to the customer"
-    )
-    
-    #nemsen
-    freight_forwarder = fields.Char(string="Тээвэр зууч",
-                           required=False, store=True, readonly=False 
-                        #    help="Number of days between the order confirmation and the shipping of the products to the customer"
-    )
     
     #nemsen
     manufacture_code = fields.Char(
@@ -1048,18 +1036,6 @@ class PurchaseOrderLine(models.Model):
     product_packaging_id = fields.Many2one('product.packaging', string='Packaging', domain="[('purchase', '=', True), ('product_id', '=', product_id)]", check_company=True,
                                            compute="_compute_product_packaging_id", store=True, readonly=False)
     product_packaging_qty = fields.Float('Packaging Quantity', compute="_compute_product_packaging_qty", store=True, readonly=False)
-
-    #nemsen
-    ship_via = fields.Char(string="Дамжуулан тээвэрлэх",
-                           required=False, store=True, readonly=False 
-                        #    help="Number of days between the order confirmation and the shipping of the products to the customer"
-    )
-    
-    #nemsen
-    freight_forwarder = fields.Char(string="Тээвэр зууч",
-                           required=False, store=True, readonly=False 
-                        #    help="Number of days between the order confirmation and the shipping of the products to the customer"
-    )
     
     #nemsen
     manufacture_code = fields.Char(

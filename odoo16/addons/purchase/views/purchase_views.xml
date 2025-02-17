@@ -179,9 +179,7 @@
                             <field name="company_id" invisible="1"/>
                             <field name="currency_id" invisible="1" groups="!base.group_multi_currency"/>
                             
-                            <!-- tvr end bairluulsan -->
-                            <field name="ship_via" />
-                            <field name="freight_forwarder" />
+                            
                         </group>
                         <group>
                             <field name="date_order" attrs="{'invisible': [('state','in',('purchase','done'))]}"/>
