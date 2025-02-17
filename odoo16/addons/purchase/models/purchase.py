@@ -202,8 +202,7 @@ class PurchaseOrder(models.Model):
     #nemsen
     other_fee = fields.Monetary( string="Other fees",required=True, store=True, readonly=False )
     
-    product_template_variant_value_ids = fields.Many2many('product.template.attribute.value',  related='product_id.product_template_variant_value_ids',
-                                                          domain=[('attribute_line_id.value_count', '>', 1)], string="Variant Values", ondelete='restrict', readonly=True)
+    
     
     
     
@@ -1072,6 +1071,9 @@ class PurchaseOrderLine(models.Model):
         related='product_id.manufacture_code',
         index=True
     )
+    
+    product_template_variant_value_ids = fields.Many2many('product.template.attribute.value',  related='product_id.product_template_variant_value_ids',
+                                                          domain=[('attribute_line_id.value_count', '>', 1)], string="Variant Values", ondelete='restrict', readonly=True)
     
     line_number = fields.Integer(string="#", compute="_compute_line_number", store=False)
     
