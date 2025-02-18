@@ -54,14 +54,10 @@
 						<button name="create_expense_invoice"
 									states="purchase" string="Create invoice of expenses" class="oe_highlight" type="object" attrs="{'invisible': [('amount_expenses', '=', 0)]}" />
 						
-                        <field name="require_signature"
-                            readonly="state in ['cancel', 'sale']"/>
-                        <field name="director_require_signature"
-                            readonly="state in ['cancel', 'sale']"/>
 					</group>
 				</page>
 				<!-- гарын үсэг шинээр нэмэв -->
-				<page string="Sales signature" name='customer_signature' >
+				<!-- <page string="Sales signature" name='customer_signature' invisible="not require_signature and not signed_by and not signature and not signed_on">
 					<group>
                         <field name="signed_by" />
                         <field name="signed_on" />
@@ -69,13 +65,13 @@
                     </group>
 				</page>
 
-				<page string="Director Signature" name="customer_signature" >
+				<page string="Director Signature" name="customer_signature" invisible="not director_require_signature and not director_signed_by and not signature and not director_signed_on">
                     <group>
                         <field name="director_signed_by" />
                         <field name="director_signed_on" />
                         <field name="director_signature" widget="image"/>
                     </group>
-                </page>
+                </page> -->
 
 			</notebook>
 		</field>
