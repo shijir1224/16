@@ -39,6 +39,17 @@ class PurchaseOrder(models.Model):
     signed_on = fields.Datetime(string="Signed On", copy=False, attachment=True)
     require_signature = fields.Boolean(string="Online signature", compute='_compute_require_signature',store=True, readonly=False, precompute=True)
     
+    #Director Signature
+    director_signature = fields.Image(string="Signature",copy=False, attachment=True, max_width=1024, max_height=1024)
+    director_signed_by = fields.Char(string="Signed By", copy=False, attachment=True)
+    director_signed_on = fields.Datetime(string="Signed On", copy=False, attachment=True)
+    director_require_signature = fields.Boolean(string="Online signature",compute='_compute_director_signature',store=True, readonly=False, precompute=True, help="Request a online signature from the customer to confirm the order.")
+    
+    @api.depends('company_id')
+    def _compute_director_signature(self):
+        for order in self:
+            order.director_require_signature = order.company_id.portal_confirmation_director_sign
+    
     @api.depends('company_id')
     def _compute_require_signature(self):
         for order in self:
