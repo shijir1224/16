@@ -55,6 +55,8 @@
 									states="purchase" string="Create invoice of expenses" class="oe_highlight" type="object" attrs="{'invisible': [('amount_expenses', '=', 0)]}" />
 					</group>
 				</page>
+				<page string="Sales signature" name='sales_signature'>
+				</page>
 			</notebook>
 		</field>
 	</record>
