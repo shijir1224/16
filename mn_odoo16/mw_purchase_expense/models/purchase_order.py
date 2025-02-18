@@ -29,9 +29,23 @@ class PurchaseOrder(models.Model):
 	amount_expenses_po_tot2 = fields.Monetary(string='Total expenses', store=True, readonly=True,
 											  compute='_amount_expenses_all', currency_field='company_currency_id',
 											  tracking=True) 
-
+	# шинээр нэмэв
 	freight_forwarder = fields.Char(string="Тээвэр зууч", store=True, readonly=False)
 	ship_via = fields.Char(string="Дамжуулан тээвэрлэх", store=True, readonly=False)
+ 
+	# гарын үсэг шинээр нэмэв
+	signature = fields.Image(string="Signature",copy=False, attachment=True, max_width=1024, max_height=1024)
+ 	
+  	signed_by = fields.Char(string="Signed By", copy=False, attachment=True)
+    
+    signed_on = fields.Datetime(string="Signed On", copy=False, attachment=True)
+    
+    require_signature = fields.Boolean(string="Online signature", compute='_compute_require_signature',store=True, readonly=False, precompute=True)
+    
+    @api.depends('company_id')
+    def _compute_require_signature(self):
+        for order in self:
+            order.require_signature = order.company_id.portal_confirmation_sign
 
 	@api.depends('currency_id', 'date_currency', 'state')
 	@api.onchange('currency_id', 'date_currency', 'state')

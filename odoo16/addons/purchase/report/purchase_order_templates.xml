@@ -222,6 +222,16 @@
             </div>
 
             <p t-field="o.notes" class="mt-4"/>
+
+            <div class="row">
+                <div t-if="not o.signature" class="col-12 oe_structure"></div>
+                <div t-else="" name="signature" class="col-12 d-flex">
+                    <div class="col-4"><strong>Signature</strong></div>
+                    <div class="col-4"><img t-att-src="image_data_uri(o.signature)" style="max-height: 4cm; max-width: 8cm;"/></div>
+                    <div class="col-4"><span t-field="o.signed_by">Oscar Morgan</span></div>
+                </div>
+            </div>
+            
             <div class="oe_structure"/>
         </div>
     </t>
