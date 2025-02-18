@@ -277,6 +277,9 @@ class AccountMoveLine(models.Model):
     # ==============================================================================================
     #                                          INVOICE
     # ==============================================================================================
+    
+    # шинээр нэмэв
+    manufacture_code = fields.Char(string='Item #', required=False, unique=True, store=True, related='product_id.manufacture_code')
 
     display_type = fields.Selection(
         selection=[
