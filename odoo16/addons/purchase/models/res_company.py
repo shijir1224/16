@@ -26,3 +26,7 @@ class Company(models.Model):
 
     po_double_validation_amount = fields.Monetary(string='Double validation amount', default=5000,
         help="Minimum amount for which a double validation is required")
+    
+    #shineer nemew
+    portal_confirmation_sign = fields.Boolean(string="Online Signature", default=True)
+    portal_confirmation_director_sign = fields.Boolean(string="Online Signature", default=True)
