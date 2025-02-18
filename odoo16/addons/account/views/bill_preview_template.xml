@@ -71,8 +71,14 @@
                                     </thead>
                                     <tbody class="invoice_tbody">
                                         <tr class="">
-                                            <td name="account_invoice_line_name">
-                                                [FURN_8999] Three-Seat Sofa
+                                            <td name="account_invoice_line_product_id.default_code">
+                                                FURN_8999
+                                            </td>
+                                            <td name="account_invoice_line_product_id.manufacture_code">
+                                                8999
+                                            </td>
+                                            <td name="account_invoice_line_product_id.name">
+                                                Sofa 
                                             </td>
                                             <td class="text-end">
                                                 <span>5.00</span>
