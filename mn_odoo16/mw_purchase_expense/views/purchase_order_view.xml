@@ -59,6 +59,10 @@
 				<!-- гарын үсэг шинээр нэмэв -->
 				<page string="Sales signature" name='customer_signature' attrs="{'invisible': [('require_signature', '=', False), ('signed_by', '=', False), ('signature', '=', False), ('signed_on', '=', False)]}">
 					<group>
+						<label for="require_signature"/>
+						<div>
+							<field name="require_signature" class="oe_inline"/>
+						</div>									
                         <field name="signed_by" />
                         <field name="signed_on" />
                         <field name="signature" widget="image"/>
@@ -67,6 +71,10 @@
 
 				<page string="Director Signature" name="customer_signature" attrs="{'invisible': [('director_require_signature', '=', False), ('director_signed_by', '=', False), ('director_signature', '=', False), ('director_signed_on', '=', False)]}">
                     <group>
+						<label for="director_require_signature"/>
+						<div>
+							<field name="director_require_signature" class="oe_inline"/>
+						</div>		
                         <field name="director_signed_by" />
                         <field name="director_signed_on" />
                         <field name="director_signature" widget="image"/>
