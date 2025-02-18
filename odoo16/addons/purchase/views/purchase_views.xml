@@ -387,10 +387,16 @@
                                     <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                     <field name="origin"/>
-                                    <!-- <field name="require_signature"
-                                        readonly="state in ['cancel', 'sale']"/>
-                                    <field name="director_require_signature"
-                                        readonly="state in ['cancel', 'sale']"/> -->
+                                    <label for="require_signature" string="Online confirmation"/>
+                                    <div>
+                                        <field name="require_signature" class="oe_inline"/>
+                                        <span>Signature</span>
+                                    </dvi>
+                                    <label for="director_require_signature"/>
+                                    <div>
+                                        <field name="director_require_signature" class="oe_inline"/>
+                                        <span>Director Signature</span>
+                                    </dvi>
                                 </group>
                                 <group name="invoice_info">
                                     <field name="invoice_status" attrs="{'invisible': [('state', 'in', ('draft', 'sent', 'to approve', 'cancel'))]}"/>
