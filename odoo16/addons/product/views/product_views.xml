@@ -41,7 +41,7 @@
                     <!-- <field name="image_1920" widget="image" class="oe_avatar fullscreen-image" options="{'preview_image': 'image_128', 'zoom': true}"/> -->
 
                     
-                    <field name="image_1920" widget="image" class="fullscreen-image" options="{'preview_image': 'image_128', 'fullscreen': true, 'zoom_in': true, 'zoom_out': true, 'close': true}" onclick="openFullscreen(this)"/>
+                    <field name="image_1920" widget="image" class="oe_avatar fullscreen-image" options="{'preview_image': 'image_128', 'fullscreen': true, 'zoom_in': true, 'zoom_out': true, 'close': true}" onclick="openFullscreen(this)"/>
                     <div id="fullscreen-modal" onclick="closeFullscreen()">
                         <img id="fullscreen-image" src="" alt="Fullscreen Image"/>
                     </div>
