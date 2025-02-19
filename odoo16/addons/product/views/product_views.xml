@@ -41,7 +41,7 @@
                     <!-- <field name="image_1920" widget="image" class="oe_avatar fullscreen-image" options="{'preview_image': 'image_128', 'zoom': true}"/> -->
 
                     
-                    <field name="image_1920" widget="image" class="oe_avatar fullscreen-image" options="{'preview_image': 'image_128', 'zoom': true, 'fullscreen': true, 'zoom_in': true, 'zoom_out': true, 'close': true}"/>
+                    <field name="image_1920" widget="image" class="oe_avatar zoomable" options="{'preview_image': 'image_128', 'zoom': true, 'fullscreen': true, 'zoom_in': true, 'zoom_out': true, 'close': true}"/>
                     <div class="oe_title">
                         <label for="name" string="Product Name"/>
                         <h1>
