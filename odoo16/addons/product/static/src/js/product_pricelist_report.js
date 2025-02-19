@@ -40,6 +40,19 @@ odoo.define('product.image.lightbox', function(require) {
     return publicWidget.registry.ProductImageLightbox;
 });
 
+const openModal = document.getElementById('open-modal');
+const closeModal = document.getElementById('close-modal');
+const modal = document.getElementById('fullscreen-modal');
+
+openModal.addEventListener('click', () => {
+  modal.style.display = 'flex';  // Show modal
+});
+
+closeModal.addEventListener('click', () => {
+  modal.style.display = 'none';  // Hide modal
+});
+
+
 
 var QtyTagWidget = Widget.extend({
     template: 'product.report_pricelist_qty',
