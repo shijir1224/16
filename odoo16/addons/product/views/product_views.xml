@@ -9,10 +9,11 @@
         <field name="arch" type="xml">
             <xpath expr="//sheet" position="inside">
                 <div class="product-image-container">
-                    <a href="/web/image/product.template/${id}/image_1920"
+                    <!-- Зургийг томруулах функц-->
+                    <a href="/web/image/product.template/<t t-esc="id"/>/image_1920"
                        class="lightbox-trigger"
                        data-options="{'preview_image': 'image_128', 'fullscreen': true, 'zoom_in': true, 'zoom_out': true, 'close': true}">
-                        <img src="/web/image/product.template/${id}/image_128" class="product-image"/>
+                        <img src="/web/image/product.template/<t t-esc="id"/>/image_128" class="product-image"/>
                     </a>
                 </div>
             </xpath>
