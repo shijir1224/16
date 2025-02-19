@@ -43,7 +43,7 @@
                     
                     <field name="image_1920" widget="image" class="fullscreen-image" options="{'preview_image': 'image_128', 'fullscreen': true, 'zoom_in': true, 'zoom_out': true, 'close': true}" onclick="openFullscreen(this)"/>
                     <div id="fullscreen-modal" onclick="closeFullscreen()">
-                        <img id="fullscreen-image" src="" alt="Fullscreen Image">
+                        <img id="fullscreen-image" src="" alt="Fullscreen Image"/>
                     </div>
                     <div class="oe_title">
                         <label for="name" string="Product Name"/>
