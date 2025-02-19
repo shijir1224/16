@@ -64,7 +64,7 @@
         <field name="inherit_id" ref="product.product_search_form_view"/>
         <field name="arch" type="xml">
             <field name="name" position="replace">
-                <field name="name" string="Product" filter_domain="['|', '|', '|', '|', '|' ('default_code', 'ilike', self), ('product_code', 'ilike', self), ('name', 'ilike', self), ('barcode', 'ilike', self), ('manufacture_code', 'ilike', self), ('tissue_no', 'ilike', self) ]"/>
+                <field name="name" string="Product" filter_domain="['|', '|', '|', '|', '|', ('default_code', 'ilike', self), ('product_code', 'ilike', self), ('name', 'ilike', self), ('barcode', 'ilike', self), ('manufacture_code', 'ilike', self), ('tissue_no', 'ilike', self) ]"/>
             </field>
         </field>
     </record>
@@ -119,7 +119,7 @@
         <field name="inherit_id" ref="product.product_template_search_view"/>
         <field name="arch" type="xml">
             <field name="name" position="replace">
-                <field name="name" string="Product" filter_domain="['|', '|', '|', '|', '|', '|' ('default_code', 'ilike', self), ('product_variant_ids.default_code', 'ilike', self),('name', 'ilike', self), ('barcode', 'ilike', self),('product_code','ilike',self), ('manufacture_code','ilike',self), ('tissue_no','ilike',self)]"/>
+                <field name="name" string="Product" filter_domain="['|', '|', '|', '|', '|', '|', ('default_code', 'ilike', self), ('product_variant_ids.default_code', 'ilike', self),('name', 'ilike', self), ('barcode', 'ilike', self),('product_code','ilike',self), ('manufacture_code','ilike',self), ('tissue_no','ilike',self)]"/>
             </field>
             <search position="inside">
                 <filter name="real_stock_available_mw" string="Үлдэгдэлтэй бараа" domain="[('qty_available','&gt;',0)]"/>
