@@ -42,9 +42,9 @@
 
                     
                     <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128', 'fullscreen': true, 'zoom_in': true, 'zoom_out': true, 'close': true}" onclick="openFullscreen(this)"/>
-                    <!-- <div id="fullscreen-modal" onclick="closeFullscreen()">
+                    <div id="fullscreen-modal" onclick="closeFullscreen()">
                         <img id="fullscreen-image" src="" alt="Fullscreen Image"/>
-                    </div> -->
+                    </div>
                     <div class="oe_title">
                         <label for="name" string="Product Name"/>
                         <h1>
