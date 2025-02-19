@@ -1077,6 +1077,13 @@ class PurchaseOrderLine(models.Model):
     
     line_number = fields.Integer(string="#", compute="_compute_line_number", store=False)
     
+    @api.depends('order_id.order_line')
+    def _compute_line_number(self):
+        for record in self:
+            if record.order_id:
+                lines = record.order_id.order_line.sorted('sequence')
+                record.line_number = {line: index + 1 for index, line in enumerate(lines)}.get(record, 0)
+    
     
     
     display_type = fields.Selection([
