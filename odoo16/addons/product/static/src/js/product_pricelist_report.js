@@ -10,6 +10,7 @@ var Widget = require('web.Widget');
 var QWeb = core.qweb;
 var _t = core._t;
 
+
 var QtyTagWidget = Widget.extend({
     template: 'product.report_pricelist_qty',
     events: {
@@ -72,6 +73,27 @@ var QtyTagWidget = Widget.extend({
         this.renderElement();
     },
 });
+
+// JavaScript
+
+function openFullscreen(imgElement) {
+    // Image clicked, show fullscreen modal
+    var modal = document.getElementById("fullscreen-modal");
+    var modalImage = document.getElementById("fullscreen-image");
+    
+    // Set the image source in the modal to the clicked image's source
+    modalImage.src = imgElement.src;
+    
+    // Show the modal
+    modal.style.display = "flex";
+}
+
+function closeFullscreen() {
+    // Close the fullscreen modal when clicked outside image
+    var modal = document.getElementById("fullscreen-modal");
+    modal.style.display = "none";
+}
+
 
 var GeneratePriceList = AbstractAction.extend(StandaloneFieldManagerMixin, {
     hasControlPanel: true,
