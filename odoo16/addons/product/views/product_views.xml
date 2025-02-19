@@ -7,16 +7,6 @@
         <field name="model">product.template</field>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
-            <xpath expr="//sheet" position="inside">
-                <div class="product-image-container">
-                    <!-- Зургийг томруулах функц-->
-                    <a href="/web/image/product.template/<t t-esc="id"/>/image_1920"
-                       class="lightbox-trigger"
-                       data-options="{'preview_image': 'image_128', 'fullscreen': true, 'zoom_in': true, 'zoom_out': true, 'close': true}">
-                        <img src="/web/image/product.template/<t t-esc="id"/>/image_128" class="product-image"/>
-                    </a>
-                </div>
-            </xpath>
             <form string="Product">
                 <header>
                     <button string="Print Labels" type="object" name="action_open_label_layout" attrs="{'invisible': [('detailed_type', '==', 'service')]}"/>
