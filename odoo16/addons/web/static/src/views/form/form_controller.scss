@@ -470,17 +470,18 @@
         background-color: rgba(0, 0, 0, 0.8);
         justify-content: center;
         align-items: center;
-        cursor: pointer;
     }
     
     .lightbox-content {
         max-width: 90%;
         max-height: 90%;
         cursor: zoom-in;
+        transition: transform 0.3s ease-in-out;
     }
     
-    .lightbox-content:hover {
-        transform: scale(5);
+    .lightbox-content.zoomed {
+        transform: scale(1.5);
+        cursor: zoom-out;
     }
     
     .close {
@@ -491,6 +492,7 @@
         font-size: 30px;
         cursor: pointer;
     }
+    
     
 
 
