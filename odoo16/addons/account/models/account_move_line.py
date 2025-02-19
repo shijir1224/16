@@ -280,7 +280,8 @@ class AccountMoveLine(models.Model):
     
     # шинээр нэмэв
     manufacture_code = fields.Char(string='Item #', required=False, unique=True, store=True, related='product_id.manufacture_code')
-
+    line_number = fields.Integer(string="#", compute="_compute_line_number", store=False)
+    
     display_type = fields.Selection(
         selection=[
             ('product', 'Product'),
@@ -295,6 +296,23 @@ class AccountMoveLine(models.Model):
         compute='_compute_display_type', store=True, readonly=False, precompute=True,
         required=True,
     )
+    
+    # шинээр нэмэв
+    @api.depends('move_id', 'sequence')
+    def _compute_line_number(self):
+        for record in self:
+            # move_lines-ийг move_id-аас авна
+            move_lines = record.move_id.line_ids.sorted(key=lambda r: r.sequence)
+            
+            # move_lines-ийг жагсаалт болгож хөрвүүлэх
+            move_lines_list = list(move_lines)
+            
+            # record move_lines_list дотор байгаа эсэхийг шалгах
+            if record in move_lines_list:
+                record.line_number = move_lines_list.index(record) + 1
+            else:
+                record.line_number = 0
+    
     product_id = fields.Many2one(
         comodel_name='product.product',
         string='Product',

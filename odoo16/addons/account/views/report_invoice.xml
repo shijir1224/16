@@ -91,6 +91,7 @@
                         <table class="table table-sm o_main_table table-borderless" name="invoice_line_table">
                             <thead>
                                 <tr>
+                                    <th name="th_index" class="text-start"><span> # </span></th>
                                     <th name="th_description" class="text-start"><span>Stock # </span></th>
                                     <th name="th_description" class="text-start"><span>Item # </span></th>
                                     <th name="th_description" class="text-start"><span>Item Name</span></th>
@@ -116,6 +117,7 @@
 
                                     <tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
                                         <t t-if="line.display_type == 'product'" name="account_invoice_line_accountable">
+                                            <td name="account_invoice_line_index"><span t-field="line.line_number" t-options="{'widget': 'text'}"/></td>
                                             <td name="account_invoice_line_default_code"><span t-field="line.product_id.default_code" t-options="{'widget': 'text'}"/></td>
                                             <td name="account_invoice_line_manufacture_code"><span t-field="line.product_id.manufacture_code" t-options="{'widget': 'text'}"/></td>
                                             <td name="account_invoice_line_name"><span t-field="line.product_id.name" t-options="{'widget': 'text'}"/></td>
