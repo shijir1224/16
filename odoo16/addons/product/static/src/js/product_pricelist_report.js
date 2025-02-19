@@ -10,6 +10,37 @@ var Widget = require('web.Widget');
 var QWeb = core.qweb;
 var _t = core._t;
 
+odoo.define('product.image.lightbox', function(require) {
+    "use strict";
+
+    var publicWidget = require('web.public.widget');
+
+    publicWidget.registry.ProductImageLightbox = publicWidget.Widget.extend({
+        selector: '.lightbox-trigger',
+        events: {
+            'click': '_onImageClick',
+        },
+
+        _onImageClick: function(event) {
+            event.preventDefault();
+            var imageUrl = $(event.currentTarget).attr('href');
+            $('body').append(`
+                <div id="image-lightbox" class="lightbox">
+                    <span class="close">&times;</span>
+                    <img class="lightbox-content" src="${imageUrl}">
+                </div>
+            `);
+
+            $('.lightbox .close').on('click', function() {
+                $('#image-lightbox').remove();
+            });
+        },
+    });
+
+    return publicWidget.registry.ProductImageLightbox;
+});
+
+
 var QtyTagWidget = Widget.extend({
     template: 'product.report_pricelist_qty',
     events: {
