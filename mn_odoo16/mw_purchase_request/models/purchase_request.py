@@ -61,7 +61,7 @@ class PurchaseRequest(models.Model):
 						  store=True
 						  )
 	is_not_edit = fields.Boolean(compute='_compute_is_not_edit')
-	flow_line_next_id = fields.Many2one('dynamic.flow.line', related='flow_line_id.flow_line_next_id', readonly=True)
+	flow_line_next_id = fields.Many2one('dynamic.flow.line', related='flow_line_id.flow_line_next_id', readonly=True, searchable=True)
 
 	next_state_type = fields.Selection(related='flow_line_next_id.state_type', string='Дараагийн төлөв', 
 							#    compute='_compute_next_state_type', 

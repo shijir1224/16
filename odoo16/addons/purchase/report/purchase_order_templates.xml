@@ -83,6 +83,7 @@
             <table class="table table-sm o_main_table table-borderless mt-4">
                 <thead style="display: table-row-group">
                     <tr>  
+                        <th name="th_index" class="text-center"><strong>#</strong></th>
                         <th name="th_stock_number" class="text-center"><strong>Stock #</strong></th>
                         <th name="th_item_number" class="text-center"><strong>Item #</strong></th>
                         <th name="th_description" class="text-center"><strong>Item Name</strong></th>
@@ -101,6 +102,9 @@
 
                         <tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
                             <t t-if="not line.display_type">
+                                 <td id="product" class="text-center">
+                                    <span t-field="line.line_number"/>
+                                </td>
                                 <td id="product" class="text-center">
                                     <span t-field="line.product_id.default_code"/>
                                 </td>
