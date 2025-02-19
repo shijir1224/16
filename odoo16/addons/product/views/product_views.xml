@@ -41,10 +41,10 @@
                     <!-- <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128', 'zoom': true}"/> -->
 
                     
-                    <field name="image_1920" widget="image" class="oe_avatar fullscreen-image" options="{'preview_image': 'image_128', 'fullscreen': true, 'zoom_in': true, 'zoom_out': true, 'close': true}" onclick="openFullscreen(this)"/>
-                    <div id="fullscreen-modal" onclick="closeFullscreen()">
+                    <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128', 'fullscreen': true, 'zoom_in': true, 'zoom_out': true, 'close': true}" onclick="openFullscreen(this)"/>
+                    <!-- <div id="fullscreen-modal" onclick="closeFullscreen()">
                         <img id="fullscreen-image" src="" alt="Fullscreen Image"/>
-                    </div>
+                    </div> -->
                     <div class="oe_title">
                         <label for="name" string="Product Name"/>
                         <h1>
@@ -249,7 +249,7 @@
                         <field name="active" invisible="1"/>
                         <field name="id" invisible="1"/>
                         <field name="company_id" invisible="1"/>
-                        <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
+                        <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128', 'fullscreen': true, 'zoom_in': true, 'zoom_out': true, 'close': true}"/>
                         <div class="oe_title">
                             <label for="name" string="Product Name"/>
                             <h1><field name="name" readonly="1" placeholder="e.g. Odoo Enterprise Subscription"/></h1>
