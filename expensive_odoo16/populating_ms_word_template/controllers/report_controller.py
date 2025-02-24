@@ -71,7 +71,12 @@ class ReportControllerInherit(ReportController):
                     response = self.report_routes(reportname, docids=docids, converter=converter, context=context)
                 else:
                     # Particular report:
-                    data = dict(url_decode(url.split('?')[1]).items())  # decoding the args represented in JSON
+                    # data = dict(url_decode(url.split('?')[1]).items())  # decoding the args represented in JSON
+                    if '?' in url:
+                        query_string = url.split('?')[1]  # Query хэсгийг салгаж авах
+                        data = dict(url_decode(query_string).items())  # decoding the args represented in JSON
+                    else:
+                        data = {} 
                     if 'context' in data:
                         context, data_context = json.loads(context or '{}'), json.loads(data.pop('context'))
                         context = json.dumps({**context, **data_context})
