@@ -52,6 +52,11 @@ class SaleOrder(models.Model):
         return ['name']
 
     #=== FIELDS ===#
+    total_delivered_price = fields.Float(string="Total Delivered Price", compute="_compute_total_delivered_price")
+    #Shineer nemew
+    def _compute_total_delivered_price(self):
+        for order in self:
+            order.total_delivered_price = sum(order.order_line.mapped('price_subtotal'))
 
     name = fields.Char(
         string="Order Reference",
