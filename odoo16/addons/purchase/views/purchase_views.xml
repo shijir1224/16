@@ -208,7 +208,7 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Products" name="products">
+                        <page string="Products ss" name="products">
                             <field name="tax_country_id" invisible="1"/>
                             <field name="order_line"
                                 widget="section_and_note_one2many"

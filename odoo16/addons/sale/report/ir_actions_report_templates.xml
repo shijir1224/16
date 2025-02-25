@@ -75,8 +75,7 @@
                         <t t-if="lines_to_report.filtered(lambda l: l.tissue_no)">
                             <th name="th_soyolon_number" class="text-center">Soyolon #</th>
                         </t>
-                         <th name="th_manufacture_code" class="text-center">Item #</th>
-
+                        <th name="th_manufacture_code" class="text-center">Item #</th>
                         <th name="th_description" class="text-center">Item Name</th>
                         <th name="th_picture" class="text-center">Picture</th>
                         <th name="th_lead_time" class="text-center">Lead time</th>
