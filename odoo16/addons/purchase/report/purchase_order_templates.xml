@@ -44,7 +44,7 @@
                     <p t-field="o.date_order" class="m-0"/>
                 </div>
             </div>
-            <table class="table table-sm o_main_table table-borderless mt-4 oe_structure" attrs="'invisible': [('po_type', '!=', 'foreign')]}">
+            <table class="table table-sm o_main_table table-borderless mt-4 oe_structure"  t-attf-class="{{ 'd-none' if o.po_type != 'foreign' else '' }}">
                 <thead>
                     <tr>
                         <th class="text-center"><strong> Incoterm </strong></th>
