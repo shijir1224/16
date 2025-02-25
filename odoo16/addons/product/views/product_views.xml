@@ -42,9 +42,54 @@
 
                     
                     <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128', 'fullscreen': true, 'zoom': true, 'close_button': true, 'size': [120, 120]}" />
-                    <!-- <div id="fullscreen-modal" onclick="closeFullscreen()">
-                        <img id="fullscreen-image" src="" alt="Fullscreen Image"/>
-                    </div> -->
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function () {
+                            const imageField = document.querySelector(".oe_avatar img");
+                            if (imageField) {
+                                imageField.addEventListener("click", function () {
+                                    let modal = document.createElement("div");
+                                    modal.style.position = "fixed";
+                                    modal.style.top = "0";
+                                    modal.style.left = "0";
+                                    modal.style.width = "100vw";
+                                    modal.style.height = "100vh";
+                                    modal.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+                                    modal.style.display = "flex";
+                                    modal.style.alignItems = "center";
+                                    modal.style.justifyContent = "center";
+                                    modal.style.zIndex = "1000";
+                                    
+                                    let fullImage = document.createElement("img");
+                                    fullImage.src = imageField.src;
+                                    fullImage.style.maxWidth = "90vw";
+                                    fullImage.style.maxHeight = "90vh";
+                                    fullImage.style.cursor = "zoom-in";
+                                    
+                                    modal.appendChild(fullImage);
+                                    document.body.appendChild(modal);
+                                    
+                                    let zoomed = false;
+                                    fullImage.addEventListener("click", function () {
+                                        if (!zoomed) {
+                                            fullImage.style.transform = "scale(2)";
+                                            fullImage.style.cursor = "zoom-out";
+                                            zoomed = true;
+                                        } else {
+                                            fullImage.style.transform = "scale(1)";
+                                            fullImage.style.cursor = "zoom-in";
+                                            zoomed = false;
+                                        }
+                                    });
+                                    
+                                    modal.addEventListener("click", function (e) {
+                                        if (e.target !== fullImage) {
+                                            modal.remove();
+                                        }
+                                    });
+                                });
+                            }
+                        });
+                    </script>
                     <div class="oe_title">
                         <label for="name" string="Product Name"/>
                         <h1>
