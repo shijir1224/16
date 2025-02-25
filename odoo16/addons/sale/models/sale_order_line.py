@@ -280,12 +280,18 @@ class SaleOrderLine(models.Model):
 
     #=== COMPUTE METHODS ===#
     
+    # shineer nemew  
     @api.depends('order_id.order_line')
     def _compute_line_number(self):
         for record in self:
             if record.order_id:
                 lines = record.order_id.order_line.sorted('sequence')
                 record.line_number = {line: index + 1 for index, line in enumerate(lines)}.get(record, 0)
+    #   shineer nemew  
+    def _compute_image_128(self):
+        """Get the image from the template if no image is set on the variant."""
+        for record in self:
+            record.image_128 = record.image_variant_128 or record.product_tmpl_id.image_128
 
     @api.depends('product_id')
     def _compute_product_template_id(self):
