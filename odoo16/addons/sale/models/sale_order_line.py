@@ -279,6 +279,13 @@ class SaleOrderLine(models.Model):
     image_128 = fields.Image(related='product_id.image_128', string="Picture", readonly=True)
 
     #=== COMPUTE METHODS ===#
+    
+    @api.depends('order_id.order_line')
+    def _compute_line_number(self):
+        for record in self:
+            if record.order_id:
+                lines = record.order_id.order_line.sorted('sequence')
+                record.line_number = {line: index + 1 for index, line in enumerate(lines)}.get(record, 0)
 
     @api.depends('product_id')
     def _compute_product_template_id(self):
