@@ -20,6 +20,12 @@
                 <p t-else="" t-field="o.incoterm_id.code" class="m-0"/>
             </div>
         </xpath>  -->
+        <xpath expr="//div[@t-elif='o.date_order']" position="after">
+            <div t-if="o.country_origin" class="col-3 bm-2">
+                <strong>Country Of Origin:</strong>
+                <p t-if="o.country_origin" class="m-0"/>
+            </div>
+        </xpath>
     </template>
 
     <template id="report_purchasequotation_document" inherit_id="purchase.report_purchasequotation_document">
