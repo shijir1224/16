@@ -57,7 +57,7 @@
 					</group>
 				</page>
 				<!-- гарын үсэг шинээр нэмэв -->
-				<page string="Sales signature" name='customer_signature' attrs="{'invisible': [('require_signature', '=', False), ('signed_by', '=', False), ('signature', '=', False), ('signed_on', '=', False)]}">
+				<page string="Sales signature" name='customer_signature' attrs="{'invisible': [('require_signature', '=', True), ('signed_by', '=', False), ('signature', '=', False), ('signed_on', '=', False)]}">
 					<group>
 						<label for="require_signature"/>
 						<div>
@@ -69,7 +69,7 @@
                     </group>
 				</page>
 
-				<page string="Director Signature" name="customer_signature" attrs="{'invisible': [('director_require_signature', '=', False), ('director_signed_by', '=', False), ('director_signature', '=', False), ('director_signed_on', '=', False)]}">
+				<page string="Director Signature" name="customer_signature" attrs="{'invisible': [('director_require_signature', '=', True), ('director_signed_by', '=', False), ('director_signature', '=', False), ('director_signed_on', '=', False)]}">
                     <group>
 						<label for="director_require_signature"/>
 						<div>
