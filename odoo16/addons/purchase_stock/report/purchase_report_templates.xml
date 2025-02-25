@@ -23,7 +23,7 @@
         <xpath expr="//div[@t-elif='o.date_order']" position="after">
             <div t-if="o.country_origin" class="col-3 bm-2">
                 <strong>Country Of Origin:</strong>
-                <p t-if="o.country_origin" class="m-0"/>
+                <span t-field="o.country_origin"/>
             </div>
         </xpath>
     </template>
