@@ -212,7 +212,7 @@
                 <button name="action_confirm" data-hotkey="v"
                     string="Confirm" type="object" context="{'validate_analytic': True}"
                     attrs="{'invisible': [('state', 'not in', ['draft'])]}"/>
-                <button name="action_quotation_send" type="object" string="Send PRO-FORMA Invoice" groups="sale.group_proforma_sales" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('invoice_count','>=',1)]}" context="{'proforma': True, 'validate_analytic': True}"/>
+                <button name="action_quotation_send" type="object" string="Send PRO-FORMA Invoice" groups="sale.group_proforma_sales" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('invoice_count','&gt;=',1)]}" context="{'proforma': True, 'validate_analytic': True}"/>
                 <button name="action_quotation_send" string="Send by Email" type="object" states="sent,sale" data-hotkey="g" context="{'validate_analytic': True}"/>
                 <button name="action_cancel" type="object" string="Cancel" attrs="{'invisible': ['|', ('state', 'not in', ['draft', 'sent','sale']), ('id', '=', False)]}" data-hotkey="z"/>
                 <button name="action_draft" states="cancel" type="object" string="Set to Quotation" data-hotkey="w"/>
@@ -291,6 +291,7 @@
                         >
                             <form>
                                 <field name="display_type" invisible="1"/>
+                                <field name="company_id" invisible="1"/>
                                 <!--
                                     We need the sequence field to be here for new lines to be added at the correct position.
                                     TODO: at some point we want to fix this in the framework so that an invisible field is not required.
@@ -310,8 +311,8 @@
                                             force_save="1"
                                             widget="many2one_barcode"
                                             />
-                                        <field name="tissue_no" invisible="1" position="after" />
-                                        <field name="manufacture_code" invisible="1" position="after"/>
+                                        <field name="tissue_no" invisible="1"   attrs="{'invisible': [('company_id', '!=', 2)]}"/>
+                                        <field name="manufacture_code" invisible="1" attrs="{'invisible': [('company_id', '!=', 2)]}"/>
                                         <field name="product_type" invisible="1"/>
                                         <field name="invoice_status" invisible="1"/>
                                         <field name="qty_to_invoice" invisible="1"/>
@@ -395,6 +396,7 @@
                                 <field name="sequence" widget="handle" />
                                 <!-- We do not display the type because we don't want the user to be bothered with that information if he has no section or note. -->
                                 <field name="display_type" invisible="1"/>
+                                <field name="company_id" invisible="1"/>
                                 <field name="product_uom_category_id" invisible="1"/>
                                 <field name="product_type" invisible="1"/>
                                 <field name="product_updatable" invisible="1"/>
@@ -420,8 +422,8 @@
                                     domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
                                     widget="sol_product_many2one"
                                 />
-                                <field name="tissue_no" optional="show"/>
-                                <field name="manufacture_code" optional="show"/>
+                                <field name="tissue_no" optional="show" attrs="{'invisible': [('company_id', '!=', 2)]}"/>
+                                <field name="manufacture_code" optional="show" attrs="{'invisible': [('company_id', '!=', 2)]}"/>
                                 <field name="product_template_id"
                                     string="Product"
                                     invisible="1"
@@ -449,7 +451,8 @@
                                            groups="analytic.group_analytic_accounting"
                                            options="{'product_field': 'product_id', 'business_domain': 'sale_order'}"/>
                                 <field name="image_128" widget="image" string="Picture" options="{'width': 50, 'height': 50}"/>
-                                <field name="customer_lead" optional="hide" readonly="state not in ['draft', 'sent', 'sale'] or is_downpayment"/>
+                                <field name="customer_lead" optional="hide"
+                                    attrs="{'readonly': ['|', ('state', 'not in', ['draft', 'sent', 'sale']), ('is_downpayment', '=', True)]}"/>
                                 <field
                                     name="product_uom_qty"
                                     decoration-info="(not display_type and invoice_status == 'to invoice')" decoration-bf="(not display_type and invoice_status == 'to invoice')"
@@ -528,8 +531,8 @@
                             <kanban class="o_kanban_mobile">
                                 <field name="name"/>
                                 <field name="product_id"/>
-                                <field name="tissue_no" />
-                                <field name="manufacture_code" />
+                                <field name="tissue_no" attrs="{'invisible': [('company_id', '!=', 2)]}"/>
+                                <field name="manufacture_code" attrs="{'invisible': [('company_id', '!=', 2)]}"/>
                                 <field name="product_uom_qty"/>
                                 <field name="product_uom"/>
                                 <field name="price_subtotal"/>
@@ -652,7 +655,13 @@
                             </group>
                         </group>
                     </page>
-                    <page groups="base.group_no_one" string="Customer Signature" name="customer_signature" attrs="{'invisible': [('require_signature', '=', False), ('signed_by', '=', False), ('signature', '=', False), ('signed_on', '=', False)]}">
+                    <page groups="base.group_no_one" string="Customer Signature" name="customer_signature"
+                        attrs="{'invisible': ['&amp;', '&amp;', '&amp;', 
+                            ('require_signature', '=', False), 
+                            ('signed_by', '=', False), 
+                            ('signature', '=', False), 
+                            ('signed_on', '=', False)]}">
+
                         <group>
                             <field name="signed_by"/>
                             <field name="signed_on"/>

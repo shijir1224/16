@@ -87,7 +87,7 @@ class AccountMoveLine(models.Model):
         tracking=True,
     )
     name = fields.Char(
-        string='Label',
+        string='Item Name',
         compute='_compute_name', store=True, readonly=False, precompute=True,
         tracking=True,
     )
@@ -476,33 +476,41 @@ class AccountMoveLine(models.Model):
                 line.currency_id = line.move_id.currency_id
             else:
                 line.currency_id = line.currency_id or line.company_id.currency_id
-
+    
     @api.depends('product_id')
     def _compute_name(self):
         for line in self:
-            if line.display_type == 'payment_term':
-                if line.move_id.payment_reference:
-                    line.name = line.move_id.payment_reference
-                elif not line.name:
-                    line.name = ''
-                continue
-            if not line.product_id or line.display_type in ('line_section', 'line_note'):
-                continue
-            if line.partner_id.lang:
-                product = line.product_id.with_context(lang=line.partner_id.lang)
+            if line.product_id:
+                line.name = line.product_id.name  # Бүтээгдэхүүний нэрийг name талбарт оруулах
             else:
-                product = line.product_id
+                line.name = ''
+    
+    # @api.depends('product_id')
+    # def _compute_name(self):
+    #     for line in self:
+    #         if line.display_type == 'payment_term':
+    #             if line.move_id.payment_reference:
+    #                 line.name = line.move_id.payment_reference
+    #             elif not line.name:
+    #                 line.name = ''
+    #             continue
+    #         if not line.product_id or line.display_type in ('line_section', 'line_note'):
+    #             continue
+    #         if line.partner_id.lang:
+    #             product = line.product_id.with_context(lang=line.partner_id.lang)
+    #         else:
+    #             product = line.product_id
 
-            values = []
-            if product.partner_ref:
-                values.append(product.partner_ref)
-            if line.journal_id.type == 'sale':
-                if product.description_sale:
-                    values.append(product.description_sale)
-            elif line.journal_id.type == 'purchase':
-                if product.description_purchase:
-                    values.append(product.description_purchase)
-            line.name = '\n'.join(values)
+    #         values = []
+    #         if product.partner_ref:
+    #             values.append(product.partner_ref)
+    #         if line.journal_id.type == 'sale':
+    #             if product.description_sale:
+    #                 values.append(product.description_sale)
+    #         elif line.journal_id.type == 'purchase':
+    #             if product.description_purchase:
+    #                 values.append(product.description_purchase)
+    #         line.name = '\n'.join(values)
 
     @api.depends('display_type', 'company_id')
     def _compute_account_id(self):

@@ -193,6 +193,13 @@ class PurchaseOrder(models.Model):
         related='product_id.manufacture_code',
         index=True
     )
+    show_manufacture_code = fields.Boolean(compute='_compute_show_manufacture_code')
+    
+    @api.depends('company_id')
+    def _compute_show_manufacture_code(self):
+        for rec in self:
+            rec.show_manufacture_code = rec.company_id.id == 2
+            
     #nemsen
     freight = fields.Monetary(string="Freight", required=True)
     #nemsen
@@ -202,6 +209,31 @@ class PurchaseOrder(models.Model):
     #nemsen
     other_fee = fields.Monetary( string="Other fees",required=True, store=True, readonly=False )
     
+    # шинээр нэмэв
+    freight_forwarder = fields.Char(string="Тээвэр зууч", store=True, readonly=False)
+    ship_via = fields.Char(string="Дамжуулан тээвэрлэх", store=True, readonly=False)
+ 
+    # гарын үсэг шинээр нэмэв
+    signature = fields.Image(string="Signature",copy=False, attachment=True, max_width=1024, max_height=1024)
+    signed_by = fields.Char(string="Signed By", copy=False, attachment=True)
+    signed_on = fields.Datetime(string="Signed On", copy=False, attachment=True)
+    require_signature = fields.Boolean(string="Online signature", compute='_compute_require_signature',store=True, readonly=False, precompute=True, default=False)
+    
+    #Director Signature
+    director_signature = fields.Image(string="Signature",copy=False, attachment=True, max_width=1024, max_height=1024)
+    director_signed_by = fields.Char(string="Signed By", copy=False, attachment=True)
+    director_signed_on = fields.Datetime(string="Signed On", copy=False, attachment=True)
+    director_require_signature = fields.Boolean(string="Online signature",compute='_compute_director_signature',store=True, readonly=False, precompute=True, default=False)
+    
+    @api.depends('company_id')
+    def _compute_director_signature(self):
+        for order in self:
+            order.director_require_signature = order.company_id.portal_confirmation_director_sign
+    
+    @api.depends('company_id')
+    def _compute_require_signature(self):
+        for order in self:
+            order.require_signature = order.company_id.portal_confirmation_sign
     
     
     
@@ -1071,6 +1103,13 @@ class PurchaseOrderLine(models.Model):
         related='product_id.manufacture_code',
         index=True
     )
+    
+    show_manufacture_code = fields.Boolean(compute='_compute_show_manufacture_code')
+    
+    @api.depends('company_id')
+    def _compute_show_manufacture_code(self):
+        for rec in self:
+            rec.show_manufacture_code = rec.company_id.id == 2
     
     product_template_variant_value_ids = fields.Many2many('product.template.attribute.value',  related='product_id.product_template_variant_value_ids',
                                                           domain=[('attribute_line_id.value_count', '>', 1)], string="Variant Values", ondelete='restrict', readonly=True)

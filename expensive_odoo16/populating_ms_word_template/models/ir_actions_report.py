@@ -530,7 +530,7 @@ class IrActionsReport(models.Model):
         )
         return amount_words
 
-    def convert_docx_to_pdf(self, source, timeout=15):
+    def convert_docx_to_pdf(self, source, timeout=60):
         filetmp = tempfile.NamedTemporaryFile(suffix='.docx')
         filetmp.write(source)
         filetmp.seek(0)

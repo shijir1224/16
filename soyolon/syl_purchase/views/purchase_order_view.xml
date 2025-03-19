@@ -188,9 +188,9 @@
 			</xpath>
 			<xpath expr="//field[@name='branch_id']" position="after">
 				<field name="deliver_day"/>
-				<field name="delivered_day"/>
+				<field name="delivered_day" attrs="{'invisible': [('company_id', '=', 2)]}"/>
 				<field name="delivered_date" invisible="1"/>
-				<field name="quality_qty"/>
+				<field name="quality_qty" attrs="{'invisible': [('company_id', '=', 2)]}"/>
 				<div>
 				</div>
 				<div>
@@ -419,7 +419,7 @@
 			<xpath expr="//notebook/page[@name='products']/field[@name='order_line']/tree/control" position="replace">
 			</xpath>
 			<xpath expr="//field[@name='picking_type_id']" position='after'>
-				<field name="country_origin" attrs="{'readonly': [('state','in',['purchase','cancel'])]}"/>
+				<field name="country_origin" attrs="{'readonly': [('state','in',['purchase','cancel'])], 'invisible': [('company_id', '=', 2)]}"/>
 				<field name="incoterm_id" attrs="{'readonly': [('state','in',['purchase','cancel'])]}" options="{'no_create': True}" force_save="1"/>
 				<field name="incoterm_location" string="Pick-up location" attrs="{'readonly': [('state','in',['purchase','cancel'])]}"/>
 				<field name="payment_term_id" attrs="{'readonly': [('state', 'in', ['purchase','cancel'])]}" options="{'no_create': True}" force_save="1"/>
