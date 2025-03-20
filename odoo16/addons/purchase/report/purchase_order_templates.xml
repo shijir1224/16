@@ -313,6 +313,25 @@
                 </div>
             </div>
 
+            <t t-if="o.company_id.id == 2">
+                <table class="table table-sm o_main_table table-borderless mt-4">
+                    <thead>
+                        <tr>
+                            <th class="text-center"><strong> Огноо </strong></th>
+                            <th class="text-center"><strong>Төлөв</strong></th>
+                            <th class="text-center"><strong>Баталсан ажилтан</strong></th>
+                            <th class="text-center"><strong>Гарын үсэг</strong></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <th class="text-center"><strong> Огноо </strong></th>
+                        <th class="text-center"><strong> Огноо </strong></th>
+                        <th class="text-center"><strong> Огноо </strong></th>
+                        <th class="text-center"><strong> Огноо </strong></th>
+                    </tbody>
+                </table>
+            <t/>
+
             <p t-field="o.notes" class="mt-4"/>
 
             <div class="row">

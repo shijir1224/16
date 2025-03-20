@@ -187,8 +187,8 @@
 				<attribute name="attrs">{'readonly': [('state','in',['purchase','cancel'])]}</attribute>
 			</xpath>
 			<xpath expr="//field[@name='branch_id']" position="after">
-				<field name="deliver_day"/>
-				<field name="delivered_day" attrs="{'invisible': [('company_id', '=', 2)]}"/>
+				<field name="deliver_day" attrs="{'invisible': [('company_id', '=', 2)]}"/>
+				<field name="delivered_day"/>
 				<field name="delivered_date" invisible="1"/>
 				<field name="quality_qty" attrs="{'invisible': [('company_id', '=', 2)]}"/>
 				<div>

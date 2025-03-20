@@ -94,8 +94,8 @@
                                     <field name="currency_id" invisible="1"/>
                                     <field name="cost_currency_id" invisible="1"/>
                                     <field name="product_variant_id" invisible="1"/>
-                                    <field name="manufacture_code" attrs="{'invisible': [('company_id', '!=', 2)]}"/>
-                                    <field name="tissue_no" attrs="{'invisible': [('company_id', '!=', 2)]}"/>
+                                    <field name="manufacture_code"  />
+                                    <field name="tissue_no"  />
                                 </group>
                             </group>
                             <group string="Internal Notes">
@@ -262,8 +262,8 @@
                         <group>
                             <group name="codes" string="Codes">
                                 <field name="default_code"/>
-                                <field name="manufacture_code" attrs="{'invisible': [('company_id', '!=', 2)]}"/>
-                                <field name="tissue_no" attrs="{'invisible': [('company_id', '!=', 2)]}"/>
+                                <field name="manufacture_code"  />
+                                <field name="tissue_no"  />
                                 <field name="barcode"/>
                                 <field name="type" invisible="1"/>
                             </group>
@@ -345,8 +345,8 @@
                     <field name="priority" widget="priority" nolabel="1" readonly="1"/>
                     <field name="default_code" optional="show" readonly="1"/>
                     <field name="barcode" optional="hide" readonly="1"/>
-                    <field name="manufacture_code" optional="show" readonly="1" attrs="{'invisible': [('company_id', '!=', 2)]}"/>
-                    <field name="tissue_no" optional="show" readonly="1" attrs="{'invisible': [('company_id', '!=', 2)]}"/>
+                    <field name="manufacture_code" optional="show" readonly="1" />
+                    <field name="tissue_no" optional="show" readonly="1"  />
                     <field name="name" readonly="1"/>
                     <field name="product_template_variant_value_ids" widget="many2many_tags" groups="product.group_product_variant" readonly="1"/>
                     <field name="company_id" groups="base.group_multi_company" optional="hide" readonly="1"/>

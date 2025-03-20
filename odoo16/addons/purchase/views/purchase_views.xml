@@ -143,7 +143,7 @@
                     <button name="print_quotation" string="Print RFQ" type="object" states="sent" groups="base.group_user" data-hotkey="k"/>
                     <button name="button_confirm" type="object" states="draft" context="{'validate_analytic': True}" string="Confirm Order" id="draft_confirm"/>
                     <button name="action_rfq_send" states="purchase" string="Send PO by Email" type="object" context="{'send_rfq':False}" data-hotkey="g"/>
-                     <button name="confirm_reminder_mail" string="Confirm Receipt Date" type="object" attrs="{'invisible': ['|','|', ('state', 'not in', ('purchase', 'done')), ('mail_reminder_confirmed', '=', True), ('date_planned', '=', False)]}" groups="base.group_no_one" data-hotkey="o"/>
+                    <button name="confirm_reminder_mail" string="Confirm Receipt Date" type="object" attrs="{'invisible': ['|','|', ('state', 'not in', ('purchase', 'done')), ('mail_reminder_confirmed', '=', True), ('date_planned', '=', False)]}" groups="base.group_no_one" data-hotkey="o"/>
                     <button name="action_create_invoice" string="Create Bill" type="object" context="{'create_bill':True}" attrs="{'invisible': ['|', '|', ('state', 'not in', ('purchase', 'done')), ('invoice_status', 'not in', ('no', 'invoiced')), ('order_line', '=', [])]}" data-hotkey="w"/>
                     <button name="button_draft" states="cancel" string="Set to Draft" type="object" data-hotkey="o"/>
                     <button name="button_cancel" states="draft,to approve,sent,purchase" string="Cancel" type="object" data-hotkey="x" />
@@ -177,9 +177,7 @@
                             <field name="currency_id" groups="base.group_multi_currency" force_save="1"/>
                             <field name="id" invisible="1"/>
                             <field name="company_id" invisible="1"/>
-                            <!-- <field name="currency_id" invisible="1" groups="!base.group_multi_currency"/> -->
-                            
-                            
+                            <field name="currency_id" invisible="1" groups="!base.group_multi_currency"/>
                         </group>
                         <group>
                             <field name="date_order" attrs="{'invisible': [('state','in',('purchase','done'))]}"/>
@@ -221,8 +219,6 @@
                                         <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
                                         <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                                     </control>
-                                    <field name="company_id" invisible="1"/>
-                                    <field name="show_manufacture_code" invisible="1"/>
                                     <field name="display_type" invisible="1"/>
                                     <field name="currency_id" invisible="1"/>
                                     <field name="state" invisible="1"/>
@@ -239,7 +235,7 @@
                                         }"
                                         context="{'partner_id':parent.partner_id, 'quantity':product_qty,'uom':product_uom, 'company_id': parent.company_id}"
                                         force_save="1" domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
-                                    <field name="manufacture_code" attrs="{'invisible': [('company_id', '!=', 2)]}" groups="base.group_multi_company"/>
+                                    <field name="manufacture_code"/>
                                     <field name="name" widget="section_and_note_text"/>
                                     <field name="date_planned" optional="hide" attrs="{'required': [('display_type', '=', False)]}" force_save="1"/>
                                     <field name="analytic_distribution" widget="analytic_distribution"
@@ -269,17 +265,14 @@
                                 <form string="Purchase Order Line">
                                         <field name="state" invisible="1"/>
                                         <field name="display_type" invisible="1"/>
-                                        <field name="company_id" invisible="1"/>
                                         <group attrs="{'invisible': [('display_type', '!=', False)]}">
                                             <group>
-                                                <field name="show_manufacture_code" invisible="1"/>
                                                 <field name="product_uom_category_id" invisible="1"/>
                                                 <field name="product_id"
                                                        context="{'partner_id': parent.partner_id}"
                                                        widget="many2one_barcode"
                                                        domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
                                                 />
-                                                <field name="manufacture_code" attrs="{'invisible': [('company_id', '!=', 2)]}" groups="base.group_multi_company"/>
                                                 <label for="product_qty"/>
                                                 <div class="o_row">
                                                     <field name="product_qty"/>
@@ -314,11 +307,9 @@
                                         <field name="name" nolabel="1"  attrs="{'invisible': [('display_type', '=', False)]}"/>
                                  </form>
                                  <kanban class="o_kanban_mobile">
-                                     <field name="company_id" invisible="1"/>
-                                     <field name="show_manufacture_code" invisible="1"/>
                                      <field name="name"/>
                                      <field name="product_id"/>
-                                     <field name="manufacture_code" attrs="{'invisible': [('company_id', '!=', 2)]}" groups="base.group_multi_company"/>
+                                     <field name="manufacture_code"/>
                                      <field name="product_qty"/>
                                      <field name="product_uom" groups="uom.group_uom"/>
                                      <field name="price_subtotal"/>
@@ -379,13 +370,13 @@
                                 </group>
                                 <group class="oe_subtotal_footer oe_right">
                                     <field name="freight"  widget="monetary" options="{'currency_field': 'currency_id', 'position': 'after'}"
-                                            attrs="{'invisible': [('company_id', '!=', 2)]}" groups="base.group_multi_company"/>
+                                            attrs="{'invisible': [('company_id', '!=', 2)]}" />
                                     <field name="service_fee"  widget="monetary" options="{'currency_field': 'currency_id', 'position': 'after'}"
-                                            attrs="{'invisible': [('company_id', '!=', 2)]}" groups="base.group_multi_company"/>
+                                            attrs="{'invisible': [('company_id', '!=', 2)]}" />
                                     <field name="packing_fee"  widget="monetary" options="{'currency_field': 'currency_id', 'position': 'after'}"
-                                            attrs="{'invisible': [('company_id', '!=', 2)]}" groups="base.group_multi_company"/>
+                                            attrs="{'invisible': [('company_id', '!=', 2)]}"/>
                                     <field name="other_fee"  widget="monetary" options="{'currency_field': 'currency_id', 'position': 'after'}" 
-                                                attrs="{'invisible': [('company_id', '!=', 2)]}" groups="base.group_multi_company"/>
+                                            attrs="{'invisible': [('company_id', '!=', 2)]}" />
                                     <field name="tax_totals" widget="account-tax-totals-field" nolabel="1" colspan="2" readonly="1"/>
                                 </group>
                             </group>
@@ -397,42 +388,12 @@
                                     <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                     <field name="origin"/>
-                                    
                                 </group>
                                 <group name="invoice_info">
                                     <field name="invoice_status" attrs="{'invisible': [('state', 'in', ('draft', 'sent', 'to approve', 'cancel'))]}"/>
                                     <field name="payment_term_id" attrs="{'readonly': ['|', ('invoice_status','=', 'invoiced'), ('state', '=', 'done')]}" options="{'no_create': True}"/>
                                     <field name="fiscal_position_id" options="{'no_create': True}" attrs="{'readonly': ['|', ('invoice_status','=', 'invoiced'), ('state', '=', 'done')]}"/>
                                 </group>
-                            </group>
-                        </page>
-
-                        <!-- гарын үсэг шинээр нэмэв -->
-                        <page string="Sales signature" name="sales_signature"
-                                attrs="{'invisible': [('company_id', '!=', 2)]}" groups="base.group_multi_company">
-                            <group>
-                                <label for="require_signature"/>
-                                <div>
-                                    <field name="require_signature" class="oe_inline"/>
-                                </div>
-                                <field name="company_id" invisible="1"/>								
-                                <field name="signed_by" />
-                                <field name="signed_on" />
-                                <field name="signature" widget="image"/>
-                            </group>
-                        </page>
-
-                        <page string="Director Signature" name="director_signature" 
-                            attrs="{'invisible': [('company_id', '!=', 2)]}" groups="base.group_multi_company">
-                            <group>
-                                <label for="director_require_signature"/>
-                                <div>
-                                    <field name="director_require_signature" class="oe_inline"/>
-                                </div>		
-                                <field name="company_id" invisible="1"/>	
-                                <field name="director_signed_by" />
-                                <field name="director_signed_on" />
-                                <field name="director_signature" widget="image"/>
                             </group>
                         </page>
                     </notebook>
@@ -465,7 +426,7 @@
                     <filter name="approved" string="Purchase Orders" domain="[('state', 'in', ('purchase', 'done'))]"/>
                     <filter name="to_approve" string="To Approve" domain="[('state', '=', 'to approve')]"/>
                     <separator/>
-                    <filter name="order_date" string="Order Date" date="date_order" />
+                    <filter name="order_date" string="Order Date" date="date_order"/>
                     <filter name="draft_rfqs" string="Draft RFQs" domain="[('state', '=', 'draft')]"/>
                     <filter name="waiting_rfqs" string="Waiting RFQs" domain="[('state', '=', 'sent'), ('date_order', '&gt;=', datetime.datetime.now())]"/>
                     <filter name="late_rfqs" string="Late RFQs" domain="[('state', 'in', ['draft', 'sent', 'to approve']),('date_order', '&lt;', datetime.datetime.now())]"/>
@@ -745,13 +706,11 @@
             <field name="model">purchase.order.line</field>
             <field name="arch" type="xml">
                 <tree string="Purchase Order Lines" create="false">
-                    <field name="company_id" invisible="1"/>
-                    <field name="show_manufacture_code" invisible="1"/>
                     <field name="order_id"/>
                     <field name="name"/>
                     <field name="partner_id" string="Vendor" />
                     <field name="product_id"/>
-                    <field name="manufacture_code" attrs="{'invisible': [('company_id', '!=', 2)]}" groups="base.group_multi_company"/>
+                    <field name="manufacture_code"/>
                     <field name="price_unit"/>
                     <field name="product_qty"/>
                     <field name="product_uom" groups="uom.group_uom"/>

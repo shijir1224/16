@@ -11,11 +11,11 @@
 													'invisible': [('po_type', '!=', 'foreign')]}"/>
 				<field name="current_rate" attrs="{'readonly': [('state', 'in', ['purchase', 'cancel'])],
 												   'invisible': [('po_type', '!=', 'foreign')]}"/>
-				<!-- шинээр нэмэв -->
-                <field name="ship_via" attrs="{'readonly': [('state', 'in', ['purchase', 'cancel'])],
-												   'invisible': [('po_type', '!=', 'foreign'), ('company_id', '!=', 2)]}"/>
+
+				<field name="ship_via" attrs="{'readonly': [('state', 'in', ['purchase', 'cancel'])],
+												   'invisible': [('po_type', '!=', 'foreign')]}"/>
                 <field name="freight_forwarder" attrs="{'readonly': [('state', 'in', ['purchase', 'cancel'])],
-												   'invisible': [('po_type', '!=', 'foreign'), ('company_id', '!=', 2)]}"/>
+												   'invisible': [('po_type', '!=', 'foreign')]}"/>
 			</field>
 			<xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="after">
 				<field name="company_currency_id" invisible="1"/>
@@ -53,10 +53,8 @@
 									states="comparison,draft,to approve,sent,purchase" string="Cost Allocation" class="oe_highlight" type="object"/>
 						<button name="create_expense_invoice"
 									states="purchase" string="Create invoice of expenses" class="oe_highlight" type="object" attrs="{'invisible': [('amount_expenses', '=', 0)]}" />
-						
 					</group>
 				</page>
-				
 			</notebook>
 		</field>
 	</record>
