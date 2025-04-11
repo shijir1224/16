@@ -199,7 +199,19 @@ class PurchaseOrder(models.Model):
     def _compute_show_manufacture_code(self):
         for rec in self:
             rec.show_manufacture_code = rec.company_id.id == 2
+    
+    company_currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True,
+                                          help='Utility field to express amount currency')
             
+    amount_expenses = fields.Monetary(string='Total expenses', store=True, readonly=True,
+                                      compute='_amount_expenses_all', currency_field='company_currency_id',
+                                      tracking=True)
+    amount_expenses_in = fields.Monetary(string='Total expenses allocated', readonly=True, store=True,
+                                         compute='_amount_expenses_all', currency_field='company_currency_id',
+                                         tracking=True)
+    
+    expenses_line = fields.One2many('purchase.order.expenses', 'order_id', 'Expenses line',
+                                    states={'done': [('readonly', True)]}, copy=False)
     #nemsen
     freight = fields.Monetary(string="Freight", required=True)
     #nemsen
@@ -288,30 +300,81 @@ class PurchaseOrder(models.Model):
                 name += ': ' + formatLang(self.env, po.amount_total, currency_obj=po.currency_id)
             result.append((po.id, name))
         return result
-
-    #Бусад зардалыг amount_total дээр нэмсэн бодолт
-    @api.depends( 'order_line.taxes_id', 'order_line.price_subtotal', 'amount_total', 'amount_untaxed', 'freight', 'service_fee', 'packing_fee', 'other_fee')
+    
+    @api.depends('order_line.taxes_id', 'order_line.price_subtotal','amount_total', 'amount_untaxed', 'amount_expenses_in', 'expenses_line')
     def _compute_tax_totals(self):
         for order in self:
-            order_lines = order.order_line.sudo().filtered(lambda x: not x.display_type)  # `sudo()` нэмсэн
-            additional_amounts = sum([
-                order.freight, 
-                order.service_fee, 
-                order.packing_fee, 
-                order.other_fee
-            ])
+            order_lines = order.order_line.sudo().filtered(lambda x: not x.display_type)
+
+            packing_fee = 0.0
+            service_fee = 0.0
+            additional_taxable_amount = 0.0
+
+            for line in order.expenses_line:
+                if not line.product_id or not hasattr(line, 'amount'):
+                    continue
+                if line.product_id.name == 'Packing fee':
+                    packing_fee += line.amount
+                    additional_taxable_amount += line.amount
+                elif line.product_id.name == 'Service fee':
+                    service_fee += line.amount
+                    additional_taxable_amount += line.amount
 
             tax_totals = self.env['account.tax'].sudo()._prepare_tax_totals(
                 [x._convert_to_tax_base_line_dict() for x in order_lines],
                 order.currency_id or order.company_id.currency_id,
             )
 
-            # tax_totals['amount_total'] += additional_amounts
-            # tax_totals['amount_untaxed'] += additional_amounts
-            tax_totals['amount_total'] = tax_totals.get('amount_total', 0.0) + additional_amounts
-            tax_totals['amount_untaxed'] = tax_totals.get('amount_untaxed', 0.0) + additional_amounts
+            tax_totals['amount_total'] += additional_taxable_amount
+            tax_totals['amount_untaxed'] += additional_taxable_amount
 
+            subtotals = tax_totals.get('subtotals', [])
+
+            if packing_fee > 0:
+                subtotals.append({
+                    'name': 'Packing fee',
+                    'amount': packing_fee,
+                    'sequence': 110,
+                })
+
+            if service_fee > 0:
+                subtotals.append({
+                    'name': 'Service fee',
+                    'amount': service_fee,
+                    'sequence': 120,
+                })
+
+            tax_totals['subtotals'] = subtotals
             order.tax_totals = tax_totals
+
+            order.packing_fee = packing_fee
+            order.service_fee = service_fee
+
+
+
+     
+
+    # #Бусад зардалыг amount_total дээр нэмсэн бодолт
+    # @api.depends( 'order_line.taxes_id', 'order_line.price_subtotal', 'amount_total', 'amount_untaxed', 'freight', 'service_fee', 'packing_fee', 'other_fee')
+    # def _compute_tax_totals(self):
+    #     for order in self:
+    #         order_lines = order.order_line.sudo().filtered(lambda x: not x.display_type)  # `sudo()` нэмсэн
+    #         additional_amounts = sum([
+    #             order.service_fee, 
+    #             order.packing_fee, 
+    #             order.other_fee
+    #         ])
+
+    #         tax_totals = self.env['account.tax'].sudo()._prepare_tax_totals(
+    #             [x._convert_to_tax_base_line_dict() for x in order_lines],
+    #             order.currency_id or order.company_id.currency_id,
+    #         )
+
+    #         # tax_totals['amount_total'] += additional_amounts
+    #         # tax_totals['amount_untaxed'] += additional_amounts
+    #         tax_totals['amount_total'] = tax_totals.get('amount_total', 0.0) + additional_amounts
+    #         tax_totals['amount_untaxed'] = tax_totals.get('amount_untaxed', 0.0) + additional_amounts
+    #         order.tax_totals = tax_totals
             
     # @api.depends('order_line.taxes_id', 'order_line.price_subtotal', 'amount_total', 'amount_untaxed')
     # def  _compute_tax_totals(self):

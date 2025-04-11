@@ -33,6 +33,15 @@ class PurchaseOrder(models.Model):
     freight_forwarder = fields.Char(string="Тээвэр зууч", store=True, readonly=False)
     ship_via = fields.Char(string="Дамжуулан тээвэрлэх", store=True, readonly=False)
     
+    #nemsen
+    service_fee = fields.Monetary(string="Service fee",required=True, store=True, readonly=False)
+    #nemsen
+    packing_fee = fields.Monetary(string="Packing fee",required=True, store=True, readonly=False)
+    #nemsen
+    other_fee = fields.Monetary( string="Other fees",required=True, store=True, readonly=False )
+    
+    
+    
     
 
     @api.depends('currency_id', 'date_currency', 'state')

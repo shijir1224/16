@@ -17,6 +17,9 @@
                 <field name="freight_forwarder" attrs="{'readonly': [('state', 'in', ['purchase', 'cancel'])],
 												   'invisible': [('po_type', '!=', 'foreign')]}"/>
 			</field>
+			<field name="tax_totals" position="before">
+				
+			</field>
 			<xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="after">
 				<field name="company_currency_id" invisible="1"/>
 				<field name="price_unit_product" groups="mw_purchase_expense.group_purchase_add_cost_user" optional="show" sum="SUM"/>

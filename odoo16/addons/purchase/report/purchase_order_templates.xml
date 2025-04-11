@@ -147,7 +147,7 @@
                                 <span t-if="o.payment_term_id" t-field="o.payment_term_id.note"/>
                             </td>
                             <td class="text-center">
-                                <span t-if="o.deliver_day" t-field="o.deliver_day"/> 
+                                <span t-if="o.delivered_day" t-field="o.delivered_day"/> 
                             </td>
                             <td class="text-center">
                                 <span t-if="o.currency_id" t-field="o.currency_id.name"/>
@@ -270,12 +270,12 @@
                 <div class="col-4">
                     <t t-set="tax_totals" t-value="o.tax_totals or {}"/>
                         <table class="table table-sm table-borderless">
-                            <tr t-if="o.freight">
+                            <!-- <tr t-if="o.freight">
                                 <td><strong>Freight</strong></td>
                                 <td class="text-end">
                                     <span t-field="o.freight"/>
                                 </td>
-                            </tr>
+                            </tr>  tvr ashiglah shaardlaggvi bolson -->
                             <tr t-if="o.service_fee">
                                 <td><strong>Service Fee</strong></td>
                                 <td class="text-end">
@@ -298,43 +298,24 @@
                             <t t-call="purchase.document_tax_totals"/> -->
                        
                             <tr>
-                                <td><strong>Untaxed Amount</strong></td>
+                                <td><strong>Нийт дүн</strong></td>
                                 <td class="text-right"><strong> <span t-field="o.amount_untaxed"/></strong></td>
                             </tr>
                             <tr>
-                                <td>Purchased goods and services</td>
+                                <td>НӨАТ 10%</td>
                                 <td class="text-right"> <span t-field="o.amount_tax"/></td>
                             </tr>
                             <tr>
-                                <td><strong>Total</strong></td>
+                                <td><strong>Нийт дүн(НӨАТ-тай)</strong></td>
                                 <td class="text-right"><strong><span t-field="o.amount_total"/></strong></td>
                             </tr>
                         </table>
                 </div>
             </div>
-
-            <t t-if="o.company_id.id == 2">
-                <table class="table table-sm o_main_table table-borderless mt-4">
-                    <thead>
-                        <tr>
-                            <th class="text-center"><strong> Огноо </strong></th>
-                            <th class="text-center"><strong>Төлөв</strong></th>
-                            <th class="text-center"><strong>Баталсан ажилтан</strong></th>
-                            <th class="text-center"><strong>Гарын үсэг</strong></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <th class="text-center"><strong> Огноо </strong></th>
-                        <th class="text-center"><strong> Огноо </strong></th>
-                        <th class="text-center"><strong> Огноо </strong></th>
-                        <th class="text-center"><strong> Огноо </strong></th>
-                    </tbody>
-                </table>
-            <t/>
-
             <p t-field="o.notes" class="mt-4"/>
+            
 
-            <div class="row">
+            <!-- <div class="row">
                 <div t-if="not o.signature" class="col-12 oe_structure"></div>
                 <div t-else="" name="signature" class="col-12 d-flex">
                     <div class="col-4"><strong>Sales</strong></div>
@@ -350,7 +331,7 @@
                     <div class="col-4"><img t-att-src="image_data_uri(o.director_signature)" style="max-height: 4cm; max-width: 8cm;"/></div>
                     <div class="col-4"><span t-field="o.director_signed_by">Oscar Morgan</span></div>
                 </div>
-            </div>
+            </div> -->
 
             <div class="oe_structure"/>
         </div>

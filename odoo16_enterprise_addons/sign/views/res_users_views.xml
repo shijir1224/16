@@ -10,6 +10,8 @@
                 <group string="Digital Signatures" name="sign" groups="base.group_system">
                     <field name="sign_signature" widget="signature" options="{'full_name': 'display_name', 'size': ['',200]}"/>
                     <field name="sign_initials" widget="signature" options="{'size': [200,'']}"/>
+                    <field name="sign_signature_frame" filename="signature_frame_file"/>
+                    <field name="sign_initials_frame" filename="initials_frame_file"/>
                 </group>
             </group>
         </field>

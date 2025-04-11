@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import calendar
+import logging
+_logger = logging.getLogger(__name__)
 from dateutil.relativedelta import relativedelta
 from datetime import datetime, timedelta
 from calendar import monthrange
@@ -114,7 +116,8 @@ class AccountAsset(models.Model):
         if not float_is_zero(self.value_residual, precision_rounding=self.currency_id.rounding):
             while days_already_depreciated < self.asset_lifetime_days:
                 period_end_depreciation_date = self._get_end_period_date(start_depreciation_date)
-                print('set111: ', period_end_depreciation_date)
+                #print('set111: ', period_end_depreciation_date)
+                _logger.info("Depreciation date: %s", period_end_depreciation_date)
                 period_end_fiscalyear_date = self.company_id.compute_fiscalyear_dates(period_end_depreciation_date).get('date_to')
 
                 days, amount = self._compute_board_amount(residual_amount, start_depreciation_date, period_end_depreciation_date, days_already_depreciated, days_left_to_depreciated, residual_declining,init=init)
