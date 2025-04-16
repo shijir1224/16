@@ -121,18 +121,6 @@ class ProductTemplate(models.Model):
     product_variant_ids = fields.One2many('product.product', 'product_tmpl_id', 'Products', required=True)
     # performance: product_variant_id provides prefetching on the first product variant only
     product_variant_id = fields.Many2one('product.product', 'Product', compute='_compute_product_variant_id')
-    
-    #shineer nemsen-1224
-    manufacture_code = fields.Char(
-        string='Item #',
-        help='Enter the unique code for the manufacturer.',
-        required=False,  # Хэрэв заавал оруулах шаардлагатай бол True болгож өөрчилнө
-        unique=True, # Давхцахгүй байх тохиргоо
-        store=True 
-    )
-    
-    #shineer nemsen-1224
-    tissue_no = fields.Char(string="Soyolon #", required=False, unique=True, store=True)
 
     product_variant_count = fields.Integer(
         '# Product Variants', compute='_compute_product_variant_count')
@@ -140,7 +128,7 @@ class ProductTemplate(models.Model):
     # related to display product product information if is_product_variant
     barcode = fields.Char('Barcode', compute='_compute_barcode', inverse='_set_barcode', search='_search_barcode')
     default_code = fields.Char(
-        'Stock #', compute='_compute_default_code',
+        'Internal Reference', compute='_compute_default_code',
         inverse='_set_default_code', store=True)
 
     pricelist_item_count = fields.Integer("Number of price rules", compute="_compute_item_count")

@@ -38,13 +38,7 @@
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="id" invisible="True"/>
-                    <!-- <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128', 'zoom': true}"/> -->
-
-                    
-                    <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128', 'fullscreen': true, 'zoom': true, 'close_button': true, 'size': [120, 120]}" />
-                    <!-- <div id="fullscreen-modal" onclick="closeFullscreen()">
-                        <img id="fullscreen-image" src="" alt="Fullscreen Image"/>
-                    </div> -->
+                    <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                     <div class="oe_title">
                         <label for="name" string="Product Name"/>
                         <h1>
@@ -94,8 +88,6 @@
                                     <field name="currency_id" invisible="1"/>
                                     <field name="cost_currency_id" invisible="1"/>
                                     <field name="product_variant_id" invisible="1"/>
-                                    <field name="manufacture_code"  />
-                                    <field name="tissue_no"  />
                                 </group>
                             </group>
                             <group string="Internal Notes">
@@ -155,7 +147,7 @@
         <field name="model">product.template</field>
         <field name="arch" type="xml">
             <search string="Product">
-                <field name="name" string="Product" filter_domain="['|', '|', '|', '|', '|', ('default_code', 'ilike', self), ('product_variant_ids.default_code', 'ilike', self),('name', 'ilike', self), ('barcode', 'ilike', self), ('tissue_no', 'ilike', self), ('manufacture_code', 'ilike', self)]"/>
+                <field name="name" string="Product" filter_domain="['|', '|', '|', ('default_code', 'ilike', self), ('product_variant_ids.default_code', 'ilike', self),('name', 'ilike', self), ('barcode', 'ilike', self)]"/>
                 <field name="categ_id" filter_domain="[('categ_id', 'child_of', raw_value)]"/>
                 <separator/>
                 <filter string="Services" name="services" domain="[('type','=','service')]"/>
@@ -208,7 +200,7 @@
             <field name="inherit_id" ref="product.product_template_search_view"/>
             <field name="arch" type="xml">
                 <field name="name" position="replace">
-                    <field name="name" string="Product" filter_domain="['|', '|', '|', '|', ('default_code', 'ilike', self), ('name', 'ilike', self), ('barcode', 'ilike', self), ('tissue_no', 'ilike', self), ('manufacture_code', 'ilike', self)]"/>
+                    <field name="name" string="Product" filter_domain="['|', '|', ('default_code', 'ilike', self), ('name', 'ilike', self), ('barcode', 'ilike', self)]"/>
                 </field>
                 <field name="attribute_line_ids" position="replace">
                     <field name="product_template_attribute_value_ids" groups="product.group_product_variant"/>
@@ -249,7 +241,7 @@
                         <field name="active" invisible="1"/>
                         <field name="id" invisible="1"/>
                         <field name="company_id" invisible="1"/>
-                        <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_1920', 'fullscreen': true, 'zoom_in': true, 'zoom_out': true, 'close': true, 'size': [120, 120]}"  data-action="zoom"/>
+                        <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                         <div class="oe_title">
                             <label for="name" string="Product Name"/>
                             <h1><field name="name" readonly="1" placeholder="e.g. Odoo Enterprise Subscription"/></h1>
@@ -262,8 +254,6 @@
                         <group>
                             <group name="codes" string="Codes">
                                 <field name="default_code"/>
-                                <field name="manufacture_code"  />
-                                <field name="tissue_no"  />
                                 <field name="barcode"/>
                                 <field name="type" invisible="1"/>
                             </group>
@@ -345,8 +335,6 @@
                     <field name="priority" widget="priority" nolabel="1" readonly="1"/>
                     <field name="default_code" optional="show" readonly="1"/>
                     <field name="barcode" optional="hide" readonly="1"/>
-                    <field name="manufacture_code" optional="show" readonly="1" />
-                    <field name="tissue_no" optional="show" readonly="1"  />
                     <field name="name" readonly="1"/>
                     <field name="product_template_variant_value_ids" widget="many2many_tags" groups="product.group_product_variant" readonly="1"/>
                     <field name="company_id" groups="base.group_multi_company" optional="hide" readonly="1"/>

@@ -146,7 +146,7 @@ class ProductProduct(models.Model):
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product Template', tracking=True,
         auto_join=True, index=True, ondelete="cascade", required=True)
-    default_code = fields.Char('Stock #', index=True, tracking=True)
+    default_code = fields.Char('Internal Referance', index=True, tracking=True)
     active = fields.Boolean(
         'Active', default=True,
         help="If unchecked, it will allow you to hide the product without removing it.", tracking=True)
