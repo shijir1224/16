@@ -20,13 +20,11 @@ class PurchaseOrder(models.Model):
     _description = "Purchase Order"
     _rec_names_search = ['name', 'partner_ref']
     _order = 'priority desc, id desc'
-    
-    
-    
-    @api.depends('order_line.price_total', 'order_line.taxes_id', 'freight', 'service_fee', 'packing_fee', 'other_fee')
+
+    @api.depends('order_line.price_total')
     def _amount_all(self):
         for order in self:
-            order_lines = order.order_line.sudo().filtered(lambda x: not x.display_type)
+            order_lines = order.order_line.filtered(lambda x: not x.display_type)
 
             if order.company_id.tax_calculation_rounding_method == 'round_globally':
                 tax_results = self.env['account.tax']._compute_taxes([
@@ -40,40 +38,9 @@ class PurchaseOrder(models.Model):
                 amount_untaxed = sum(order_lines.mapped('price_subtotal'))
                 amount_tax = sum(order_lines.mapped('price_tax'))
 
-            # ✅ Нэмэлт төлбөрүүдийг тооцоолох
-            additional_amounts = order.freight + order.service_fee + order.packing_fee + order.other_fee
-
-            # ✅ Татварын нийт дүнг тооцоолох
-            tax_totals = self.env['account.tax'].sudo()._prepare_tax_totals(
-                [x._convert_to_tax_base_line_dict() for x in order_lines],
-                order.currency_id or order.company_id.currency_id,
-            )
-
-            # ✅ Order-ийн нийт үнийг update хийх
-            order.amount_untaxed = amount_untaxed + additional_amounts
-            order.amount_tax = amount_tax  # Энэ хэсэг асуудалгүй эсэхийг шалгах
-            order.amount_total = amount_untaxed + amount_tax + additional_amounts
-
-    # @api.depends('order_line.price_total')
-    # def _amount_all(self):
-    #     for order in self:
-    #         order_lines = order.order_line.filtered(lambda x: not x.display_type)
-
-    #         if order.company_id.tax_calculation_rounding_method == 'round_globally':
-    #             tax_results = self.env['account.tax']._compute_taxes([
-    #                 line._convert_to_tax_base_line_dict()
-    #                 for line in order_lines
-    #             ])
-    #             totals = tax_results['totals']
-    #             amount_untaxed = totals.get(order.currency_id, {}).get('amount_untaxed', 0.0)
-    #             amount_tax = totals.get(order.currency_id, {}).get('amount_tax', 0.0)
-    #         else:
-    #             amount_untaxed = sum(order_lines.mapped('price_subtotal'))
-    #             amount_tax = sum(order_lines.mapped('price_tax'))
-
-    #         order.amount_untaxed = amount_untaxed
-    #         order.amount_tax = amount_tax
-    #         order.amount_total = order.amount_untaxed + order.amount_tax
+            order.amount_untaxed = amount_untaxed
+            order.amount_tax = amount_tax
+            order.amount_total = order.amount_untaxed + order.amount_tax
 
     @api.depends('state', 'order_line.qty_to_invoice')
     def _get_invoiced(self):
@@ -183,74 +150,7 @@ class PurchaseOrder(models.Model):
 
     receipt_reminder_email = fields.Boolean('Receipt Reminder Email', related='partner_id.receipt_reminder_email', readonly=False)
     reminder_date_before_receipt = fields.Integer('Days Before Receipt', related='partner_id.reminder_date_before_receipt', readonly=False)
-    
-    #nemsen
-    manufacture_code = fields.Char(
-        string='Item #',
-        required=False,  # Хэрэв заавал оруулах шаардлагатай бол True болгож өөрчилнө
-        unique=True, # Давхцахгүй байх тохиргоо
-        store=True,
-        related='product_id.manufacture_code',
-        index=True
-    )
-    show_manufacture_code = fields.Boolean(compute='_compute_show_manufacture_code')
-    
-    @api.depends('company_id')
-    def _compute_show_manufacture_code(self):
-        for rec in self:
-            rec.show_manufacture_code = rec.company_id.id == 2
-    
-    company_currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True,
-                                          help='Utility field to express amount currency')
-            
-    amount_expenses = fields.Monetary(string='Total expenses', store=True, readonly=True,
-                                      compute='_amount_expenses_all', currency_field='company_currency_id',
-                                      tracking=True)
-    amount_expenses_in = fields.Monetary(string='Total expenses allocated', readonly=True, store=True,
-                                         compute='_amount_expenses_all', currency_field='company_currency_id',
-                                         tracking=True)
-    
-    expenses_line = fields.One2many('purchase.order.expenses', 'order_id', 'Expenses line',
-                                    states={'done': [('readonly', True)]}, copy=False)
-    #nemsen
-    freight = fields.Monetary(string="Freight", required=True)
-    #nemsen
-    service_fee = fields.Monetary(string="Service fee",required=True, store=True, readonly=False)
-    #nemsen
-    packing_fee = fields.Monetary(string="Packing fee",required=True, store=True, readonly=False)
-    #nemsen
-    other_fee = fields.Monetary( string="Other fees",required=True, store=True, readonly=False )
-    
-    # шинээр нэмэв
-    freight_forwarder = fields.Char(string="Тээвэр зууч", store=True, readonly=False)
-    ship_via = fields.Char(string="Дамжуулан тээвэрлэх", store=True, readonly=False)
- 
-    # гарын үсэг шинээр нэмэв
-    signature = fields.Image(string="Signature",copy=False, attachment=True, max_width=1024, max_height=1024)
-    signed_by = fields.Char(string="Signed By", copy=False, attachment=True)
-    signed_on = fields.Datetime(string="Signed On", copy=False, attachment=True)
-    require_signature = fields.Boolean(string="Online signature", compute='_compute_require_signature',store=True, readonly=False, precompute=True, default=False)
-    
-    #Director Signature
-    director_signature = fields.Image(string="Signature",copy=False, attachment=True, max_width=1024, max_height=1024)
-    director_signed_by = fields.Char(string="Signed By", copy=False, attachment=True)
-    director_signed_on = fields.Datetime(string="Signed On", copy=False, attachment=True)
-    director_require_signature = fields.Boolean(string="Online signature",compute='_compute_director_signature',store=True, readonly=False, precompute=True, default=False)
-    
-    @api.depends('company_id')
-    def _compute_director_signature(self):
-        for order in self:
-            order.director_require_signature = order.company_id.portal_confirmation_director_sign
-    
-    @api.depends('company_id')
-    def _compute_require_signature(self):
-        for order in self:
-            order.require_signature = order.company_id.portal_confirmation_sign
-    
-    
-    
-    
-    
+
     @api.constrains('company_id', 'order_line')
     def _check_order_line_company_id(self):
         for order in self:
@@ -300,90 +200,15 @@ class PurchaseOrder(models.Model):
                 name += ': ' + formatLang(self.env, po.amount_total, currency_obj=po.currency_id)
             result.append((po.id, name))
         return result
-    
-    @api.depends('order_line.taxes_id', 'order_line.price_subtotal','amount_total', 'amount_untaxed', 'amount_expenses_in', 'expenses_line')
-    def _compute_tax_totals(self):
+
+    @api.depends('order_line.taxes_id', 'order_line.price_subtotal', 'amount_total', 'amount_untaxed')
+    def  _compute_tax_totals(self):
         for order in self:
-            order_lines = order.order_line.sudo().filtered(lambda x: not x.display_type)
-
-            packing_fee = 0.0
-            service_fee = 0.0
-            additional_taxable_amount = 0.0
-
-            for line in order.expenses_line:
-                if not line.product_id or not hasattr(line, 'amount'):
-                    continue
-                if line.product_id.name == 'Packing fee':
-                    packing_fee += line.amount
-                    additional_taxable_amount += line.amount
-                elif line.product_id.name == 'Service fee':
-                    service_fee += line.amount
-                    additional_taxable_amount += line.amount
-
-            tax_totals = self.env['account.tax'].sudo()._prepare_tax_totals(
+            order_lines = order.order_line.filtered(lambda x: not x.display_type)
+            order.tax_totals = self.env['account.tax']._prepare_tax_totals(
                 [x._convert_to_tax_base_line_dict() for x in order_lines],
                 order.currency_id or order.company_id.currency_id,
             )
-
-            tax_totals['amount_total'] += additional_taxable_amount
-            tax_totals['amount_untaxed'] += additional_taxable_amount
-
-            subtotals = tax_totals.get('subtotals', [])
-
-            if packing_fee > 0:
-                subtotals.append({
-                    'name': 'Packing fee',
-                    'amount': packing_fee,
-                    'sequence': 110,
-                })
-
-            if service_fee > 0:
-                subtotals.append({
-                    'name': 'Service fee',
-                    'amount': service_fee,
-                    'sequence': 120,
-                })
-
-            tax_totals['subtotals'] = subtotals
-            order.tax_totals = tax_totals
-
-            order.packing_fee = packing_fee
-            order.service_fee = service_fee
-
-
-
-     
-
-    # #Бусад зардалыг amount_total дээр нэмсэн бодолт
-    # @api.depends( 'order_line.taxes_id', 'order_line.price_subtotal', 'amount_total', 'amount_untaxed', 'freight', 'service_fee', 'packing_fee', 'other_fee')
-    # def _compute_tax_totals(self):
-    #     for order in self:
-    #         order_lines = order.order_line.sudo().filtered(lambda x: not x.display_type)  # `sudo()` нэмсэн
-    #         additional_amounts = sum([
-    #             order.service_fee, 
-    #             order.packing_fee, 
-    #             order.other_fee
-    #         ])
-
-    #         tax_totals = self.env['account.tax'].sudo()._prepare_tax_totals(
-    #             [x._convert_to_tax_base_line_dict() for x in order_lines],
-    #             order.currency_id or order.company_id.currency_id,
-    #         )
-
-    #         # tax_totals['amount_total'] += additional_amounts
-    #         # tax_totals['amount_untaxed'] += additional_amounts
-    #         tax_totals['amount_total'] = tax_totals.get('amount_total', 0.0) + additional_amounts
-    #         tax_totals['amount_untaxed'] = tax_totals.get('amount_untaxed', 0.0) + additional_amounts
-    #         order.tax_totals = tax_totals
-            
-    # @api.depends('order_line.taxes_id', 'order_line.price_subtotal', 'amount_total', 'amount_untaxed')
-    # def  _compute_tax_totals(self):
-    #     for order in self:
-    #         order_lines = order.order_line.filtered(lambda x: not x.display_type)
-    #         order.tax_totals = self.env['account.tax']._prepare_tax_totals(
-    #             [x._convert_to_tax_base_line_dict() for x in order_lines],
-    #             order.currency_id or order.company_id.currency_id,
-    #         )
 
     @api.depends('company_id.account_fiscal_country_id', 'fiscal_position_id.country_id', 'fiscal_position_id.foreign_vat')
     def _compute_tax_country_id(self):
@@ -1119,8 +944,7 @@ class PurchaseOrderLine(models.Model):
     taxes_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
     product_uom = fields.Many2one('uom.uom', string='Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
-    #product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], change_default=True, index='btree_not_null')
-    product_id = fields.Many2one('product.product', string='Stock #', domain=[('purchase_ok', '=', True)], change_default=True, index=True)
+    product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], change_default=True, index='btree_not_null')
     product_type = fields.Selection(related='product_id.detailed_type', readonly=True)
     price_unit = fields.Float(
         string='Unit Price', required=True, digits='Product Price',
@@ -1156,38 +980,7 @@ class PurchaseOrderLine(models.Model):
     product_packaging_id = fields.Many2one('product.packaging', string='Packaging', domain="[('purchase', '=', True), ('product_id', '=', product_id)]", check_company=True,
                                            compute="_compute_product_packaging_id", store=True, readonly=False)
     product_packaging_qty = fields.Float('Packaging Quantity', compute="_compute_product_packaging_qty", store=True, readonly=False)
-    
-    #nemsen
-    manufacture_code = fields.Char(
-        string='Item #',
-        required=False,  # Хэрэв заавал оруулах шаардлагатай бол True болгож өөрчилнө
-        unique=True, # Давхцахгүй байх тохиргоо
-        store=True,
-        related='product_id.manufacture_code',
-        index=True
-    )
-    
-    show_manufacture_code = fields.Boolean(compute='_compute_show_manufacture_code')
-    
-    @api.depends('company_id')
-    def _compute_show_manufacture_code(self):
-        for rec in self:
-            rec.show_manufacture_code = rec.company_id.id == 2
-    
-    product_template_variant_value_ids = fields.Many2many('product.template.attribute.value',  related='product_id.product_template_variant_value_ids',
-                                                          domain=[('attribute_line_id.value_count', '>', 1)], string="Variant Values", ondelete='restrict', readonly=True)
-    
-    line_number = fields.Integer(string="#", compute="_compute_line_number", store=False)
-    
-    @api.depends('order_id.order_line')
-    def _compute_line_number(self):
-        for record in self:
-            if record.order_id:
-                lines = record.order_id.order_line.sorted('sequence')
-                record.line_number = {line: index + 1 for index, line in enumerate(lines)}.get(record, 0)
-    
-    
-    
+
     display_type = fields.Selection([
         ('line_section', "Section"),
         ('line_note', "Note")], default=False, help="Technical field for UX purpose.")
