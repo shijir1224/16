@@ -52,11 +52,6 @@ class SaleOrder(models.Model):
         return ['name']
 
     #=== FIELDS ===#
-    
-    # end tvr nemew
-    niit_urtug = fields.Float(string='Нийт өртөг', compute='_compute_niit_urtug', store=True, readonly=True)
-    total_delivered_price = fields.Float(string='Захиалгын дүн/Хүргэгдсэн/', compute='_com_delivered_amount', store=True, readonly=True)
-    total_delivered_nuat_price = fields.Float(string='Захиалын НӨАТ дүн/Хүргэгдсэн/', compute='_com_delivered_amount', store=True, readonly=True)
 
     name = fields.Char(
         string="Order Reference",

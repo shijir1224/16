@@ -107,7 +107,7 @@ class SaleOrderLine(models.Model):
         store=True, readonly=False, precompute=True, ondelete='restrict')
 
     name = fields.Text(
-        string="Item Name",
+        string="Description",
         compute='_compute_name',
         store=True, readonly=False, required=True, precompute=True)
 
@@ -263,35 +263,8 @@ class SaleOrderLine(models.Model):
         compute='_compute_product_updatable')
     product_uom_readonly = fields.Boolean(
         compute='_compute_product_uom_readonly')
-    
-    manufacture_code = fields.Char(
-        string='Item #',
-        required=False,  # Хэрэв заавал оруулах шаардлагатай бол True болгож өөрчилнө
-        unique=True, # Давхцахгүй байх тохиргоо
-        store=True, # Харуулах шаардлаггүй бол False болгоно
-        related='product_id.manufacture_code'
-    )
-    
-    line_number = fields.Integer(string="#", compute="_compute_line_number", store=False)
-    
-    tissue_no = fields.Char(string="Soyolon #", required=False, unique=True, store=True, related='product_id.tissue_no')
-    
-    image_128 = fields.Image(related='product_id.image_128', string="Picture", readonly=True)
 
     #=== COMPUTE METHODS ===#
-    
-    # shineer nemew  
-    @api.depends('order_id.order_line')
-    def _compute_line_number(self):
-        for record in self:
-            if record.order_id:
-                lines = record.order_id.order_line.sorted('sequence')
-                record.line_number = {line: index + 1 for index, line in enumerate(lines)}.get(record, 0)
-    #   shineer nemew  
-    def _compute_image_128(self):
-        """Get the image from the template if no image is set on the variant."""
-        for record in self:
-            record.image_128 = record.image_variant_128 or record.product_tmpl_id.image_128
 
     @api.depends('product_id')
     def _compute_product_template_id(self):
@@ -332,28 +305,20 @@ class SaleOrderLine(models.Model):
     @api.depends('product_id')
     def _compute_name(self):
         for line in self:
-            if line.product_id:
-                line.name = line.product_id.name  # Бүтээгдэхүүний нэрийг name талбарт оруулах
-            else:
-                line.name = ''
-                
-    #@api.depends('product_id')         
-    # def _compute_name(self):
-    #     for line in self:
-    #         if not line.product_id:
-    #             continue
-    #         if not line.order_partner_id.is_public:
-    #             line = line.with_context(lang=line.order_partner_id.lang)
-    #         name = line._get_sale_order_line_multiline_description_sale()
-    #         if line.is_downpayment and not line.display_type:
-    #             context = {'lang': line.order_partner_id.lang}
-    #             dp_state = line._get_downpayment_state()
-    #             if dp_state == 'draft':
-    #                 name = _("%(line_description)s (Draft)", line_description=name)
-    #             elif dp_state == 'cancel':
-    #                 name = _("%(line_description)s (Canceled)", line_description=name)
-    #             del context
-    #         line.name = name
+            if not line.product_id:
+                continue
+            if not line.order_partner_id.is_public:
+                line = line.with_context(lang=line.order_partner_id.lang)
+            name = line._get_sale_order_line_multiline_description_sale()
+            if line.is_downpayment and not line.display_type:
+                context = {'lang': line.order_partner_id.lang}
+                dp_state = line._get_downpayment_state()
+                if dp_state == 'draft':
+                    name = _("%(line_description)s (Draft)", line_description=name)
+                elif dp_state == 'cancel':
+                    name = _("%(line_description)s (Canceled)", line_description=name)
+                del context
+            line.name = name
 
     def _get_sale_order_line_multiline_description_sale(self):
         """ Compute a default multiline description for this sales order line.
